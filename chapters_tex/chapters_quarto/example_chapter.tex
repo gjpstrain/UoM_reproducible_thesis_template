@@ -1,8 +1,6 @@
 \documentclass[../main.tex]{subfiles}
-\graphicspath{{collated_images/}{collated_images/}}
-\bibliography{../references.bib}
 \begin{document}
-\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[enhanced, sharp corners, frame hidden, boxrule=0pt, interior hidden, borderline west={3pt}{0pt}{shadecolor}, breakable]}{\end{tcolorbox}}\fi
+\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[sharp corners, breakable, borderline west={3pt}{0pt}{shadecolor}, interior hidden, frame hidden, boxrule=0pt, enhanced]}{\end{tcolorbox}}\fi
 
 \hypertarget{how-to-write-thesis-chapters}{%
 \section{How to write thesis
@@ -68,8 +66,9 @@ accomplishes this:
   \texttt{main.tex} in the top-level directory should be used to specify
   authors, declarations, abstracts etc.
 \item
-  once chapters are all written, use the \texttt{reform\_tex.r} script
-  to reformat the tex and render the main document.
+  once chapters are all written, reformat the tex using the function
+  provided in the \texttt{reformat\_tex.r} file, then compile
+  \texttt{main.tex}.
 \end{itemize}
 
 Itemise is demonstrated above.

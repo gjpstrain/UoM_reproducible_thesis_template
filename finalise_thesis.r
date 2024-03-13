@@ -16,7 +16,6 @@ replace_before_document <- function(file_path) {
   
   if (length(preamble_index) > 0) {
     new_lines <- c("\\documentclass[../main.tex]{subfiles}",
-                   "\\graphicspath{{collated_images/}{collated_images/}}",
                    lines[(preamble_index):length(lines)])
     
     new_lines <- grep("\\\\maketitle", new_lines, invert = TRUE, value = TRUE)
