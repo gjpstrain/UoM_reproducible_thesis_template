@@ -1,6 +1,14 @@
+# R files
+
 .Rproj.user
 .Rhistory
 .RData
 .Ruserdata
+
+# Latex files
+
+.xmpdata
+.xmpi
+
 
 /.quarto/
