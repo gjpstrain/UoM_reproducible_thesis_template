@@ -2,6 +2,9 @@
 
 ## Quarto Chapters
 
+
+ - [Quarto](https://quarto.org/) is an open-source document preparation system.
+ - If you are using the latest version of Rstudio, quarto is included. Otherwise, follow the link to download the standalone version. There is also a VS Code extension.
  - Each chapter is written using quarto in Rstudio.
  - These .qmd files are stored in `chapters_quarto`.
  - Quarto features markdown syntax, and can mix and match code chunks from a range of languages.
@@ -15,7 +18,8 @@
  - Authorship, declarations, and abstracts are also handled by `main.tex`.
  - Once all chapters are finished, you are ready to knit your final thesis.
  - I am an R user, so I have written an R script that renders each .qmd chapter, reformats the .tex of each chapter, and then produces the thesis using the .cls file included.
- - Create a PR to contribute scripts in other languages that achieve this.
+ - **NB: reformatting the `.tex` is important**. Pandoc adds preamables which `main.tex` **does not want**.
+ - (Feel free to create a PR to contribute scripts in other languages that achieve this.)
  - My R script uses TinyTex to produce the final thesis, but this is not necessary - uploading a .zip of the thesis to overleaf also works perfectly.
 
 ## Quirks
