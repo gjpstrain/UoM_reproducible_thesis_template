@@ -1,0 +1,187 @@
+%%%%%%%%%%%%%%%%%% USAGE INSTRUCTIONS %%%%%%%%%%%%%%%%%%
+% - Compile using LuaLaTeX and biber, unless there is a particular reason not to. Do not use the older LaTex/PDFLaTeX or BibTeX (the fonts won't work correctly.)
+% - Font and the report 'year' must be specified when all \documentclass or the template won't work correctly. (There's no error checking/default cases!)
+% - Options for fonts are: calibri, times, palatino, garamond, arial, tahoma, verdana, trebuchet. Note however that not all these are installed on Overleaf, you need to install to your project 
+% - Options for 'year' are: first, second, thesis.
+% - If not a thesis, should probably remove the COVID-19 impact statement page
+% - As many further packages as wanted can be loaded. Below are just an example set. Note that template itself loads a number of packages, including hyperref.
+% - References are handed using biblatex.
+% - Don't need to include a \uomdeclarations unless this is a thesis
+% - Note there is more documentation in the header of uom_these_casson.cls file if you need more help
+% - Link to the presentation of theses policy: http://www.regulations.manchester.ac.uk/pgr-presentation-theses/
+
+
+
+%%%%%%%%%%%%%%%%%% META DATA SETUP %%%%%%%%%%%%%%%%%%
+% This is where the document title and author are set. Other details for the title page are set later
+\begin{filecontents*}{\jobname.xmpdata}
+  \Title{Thesis title goes here} 
+  \Author{Author McAuthorFace}
+  \Language{en-GB}
+  \Copyrighted{True}
+  % More meta-data fielda can be added here if wanted, see https://ctan.org/pkg/pdfx?lang=en for fields
+\end{filecontents*}
+
+
+
+%%%%%%%%%%%%%%%%%% DOCUMENT SETUP %%%%%%%%%%%%%%%%%%
+\documentclass[times,thesis]{uom_thesis_casson} % See above for font options Year can be: first, second or thesis.
+
+
+
+%%%%%%%%%%%%%%%%%% PACKAGES AND COMMANDS %%%%%%%%%%%%%%%%%%
+
+% Packages - some useful examples
+\usepackage{amsmath}               % assumes amsmath package installed
+  \allowdisplaybreaks[1]           % allow eqnarrays to break across pages
+\usepackage{amssymb}               % assumes amsmath package installed 
+\usepackage{url}                   % format hyperlinks correctly
+\usepackage{rotating}              % allow portrait figures and tables
+\usepackage{multirow}              % allows merging of rows in tables
+\usepackage{lscape}                % allows pages to be typeset in landscape mode
+\usepackage{tabularx}              % allows fixed width tables
+\usepackage{verbatim}              % enhanced version of built-in verbatim environment
+\usepackage{footnote}              % allows more control over footnote environments
+\usepackage{float}                 % allows H option on floats to force here placement
+\usepackage{booktabs}              % improve table line spacing
+\usepackage[base]{babel}           % required for lisum package
+\usepackage{lipsum}                % for adding dummy text here
+\usepackage{subcaption}            % for multiple sub-figures in a single float
+\usepackage{siunitx}               % add SI units
+% Add your packages here
+\usepackage{subfiles}
+\usepackage{bibentry}
+
+%\usepackage[printonlyused]{acronym}
+
+\usepackage{fancyref}
+
+\usepackage{xcolor}
+
+% Custom commands
+\newcommand{\degree}{\ensuremath{^\circ}}
+\newcommand{\sus}[1]{$^{\mbox{\scriptsize #1}}$} % superscript in text (e.g. 1st can be 1\sus{st})
+\newcommand{\sub}[1]{$_{\mbox{\scriptsize #1}}$} % subscript in text
+\newcommand{\chap}[1]{Chapter~\ref{#1}}
+\newcommand{\sect}[1]{Section~\ref{#1}}
+\newcommand{\fig}[1]{Figure~\ref{#1}}
+\newcommand{\tab}[1]{Table~\ref{#1}}
+\newcommand{\equ}[1]{Equation~(\ref{#1})}
+\newcommand{\appx}[1]{Appendix~\ref{#1}}
+% Add your commands here
+
+
+
+%%%%%%%%%%%%%%%%%% REFERENCES SETUP %%%%%%%%%%%%%%%%%%
+
+% Setup your references here. Change the reference style here if wanted
+\usepackage[style=numeric-comp,backend=biber, maxbibnames = 99, maxcitenames=3, minnames=1, backref=true,hyperref=auto,natbib=true]{biblatex}
+% Note backref=true adds a page number (and hyperlink) to each reference so you can easily go back from the references to the main document. You may prefer backref=false if you need to stick strictly to a given reference style
+
+
+% Fixes which can't be applied in the .cls file
+\DefineBibliographyStrings{english}{backrefpage = {cited on p\adddot},  backrefpages = {cited on pp\adddot}}
+  \renewcommand*{\bibfont}{\large}
+
+
+% Add more .bib files here if wanted
+\addbibresource{references.bib}
+
+%%%%%%%%%%%%%%%%%% START DOCUMENT %%%%%%%%%%%%%%%%%%
+\begin{document}
+
+%%%%%%%%%%%%%%%%%% COVID-19 impact statement %%%%%%%%%%%%%%%%%%
+\begin{uomcovid} % policy asks for statement to be before the title page
+  % Policy asks for this to be removed from the final thesis post-examination, which messes up the page numbers somewhat. Done here so that the final post-examination thesis is correct. In the pre-examination thesis the numbers displayed on the page will be one lower than the number displayed by the PDF reader. Remove this page if not wanted/needed, and/or is a first or second year report
+  Optional. Delete this section if not needed. This is COVID-19 impact text.
+  
+  \lipsum[1-3] % generate dummy text for here
+\end{uomcovid}% \clearpage is added automatically
+
+
+
+%%%%%%%%%%%%%%%%%% TITLE PAGE %%%%%%%%%%%%%%%%%%
+
+% Title and author are automatically taken from the document meta-data defined above
+\makeatletter
+\title{\xmp@Title}
+\author{\xmp@Author}
+\makeatother
+
+% Set the below yourself
+\faculty{Science and Engineering}                  % "Faculty of" is added automatically
+\department{Department of Authoring} % regulations allow School, Division, or Department to be put here
+\submitdate{202X}                                  % regulations ask only for the year, not month
+\wordcount{1000}		                           % use \wordcount{} to set the count, \thewordcount to print in the text
+\maketitle
+
+
+
+%%%%%%%%%%%%%%%%%% LISTS OF CONTENT %%%%%%%%%%%%%%%%%%
+
+% Probably don't need all of these unless final thesis
+\uomtoc % contents 
+\uomlof % figures
+\uomlot % tables
+\begin{uomlop} % list of publications.
+  % Can use biblatex to \printbibliography[heading=none] to populate automatically, or can add a custom list via the tocloft package, but probably easier to just type in unless you have lots!
+  Publications go here.
+\end{uomlop}
+
+%%%%%%%%%%%%%%%%%% ABSTRACT %%%%%%%%%%%%%%%%%%
+\begin{abstract} % put abstract here. Limit is 1 page.
+
+put abstract here
+  
+  \lipsum[1-2]
+\end{abstract}%
+\clearpage
+
+
+
+%%%%%%%%%%%%%%%%%% LAY ABSTRACT %%%%%%%%%%%%%%%%%%
+\begin{uomlay} % put lay abstract here. Limit is 1 page. Not compulsory
+  This is lay abstract text. 
+  
+  \lipsum[1-2]
+\end{uomlay}
+
+
+
+%%%%%%%%%%%%%%%%%% DECLARATIONS %%%%%%%%%%%%%%%%%%
+\uomdeclarations % Don't need unless final thesis. No options are needed. Having this command will add the required declarations
+
+
+
+% %%%%%%%%%%%%%%%%%% LIST OF THESIS REVISIONS %%%%%%%%%%%%%%%%%%
+% \begin{uomlotr} % Only required for resubmitted theses
+% Put list of revisions here. Only required for resubmitted theses. Delete if not needed
+% \end{uomlotr} 
+
+
+
+%%%%%%%%%%%%%%%%%% ACKNOWLEDGEMENTS %%%%%%%%%%%%%%%%%%
+\begin{uomacknowledgements} % probably don't need unless final thesis
+Acknowledgements go here.
+\end{uomacknowledgements}
+
+%%%%%%%% CHAPTERS %%%%%%%%%%%%%%%%%%
+\chapter{Example Chapter} 
+\subfile{chapters_tex/chapters_quarto/example_chapter.tex}
+
+
+%%%%%%%%%%%%%%%%%% REFERENCES %%%%%%%%%%%%%%%%%%
+\printbibliography[title={References},heading=bibintoc] % a single list of references for the whole thesis
+
+
+
+%%%%%%%%%%%%%%%%%% APPENDICES %%%%%%%%%%%%%%%%%%
+\begin{uomappendix} 
+  \chapter{First appendix}
+    \section{Section in Appendix}
+    \lipsum[1-6]
+\end{uomappendix}
+
+
+%%%%%%%%%%%%%%%%%% END MATTER %%%%%%%%%%%%%%%%%%
+\end{document}

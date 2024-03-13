@@ -1,0 +1,129 @@
+---
+title: "example_chapter"
+output:
+  format: 
+    latex:
+      
+params:
+  eval_models: false
+  
+knitr:
+  opts_chunk: 
+    cache_comments: false
+    crop: true      # this is a perl script that crops pdfs
+    
+execute: 
+  echo: false       # echo tells knitr whether to display code (not just output)
+  warning: false    # display warnings
+  message: false    # display messages
+  include: false    # whether to include the output of a chunk            
+---
+
+# How to write thesis chapters
+
+Quarto uses markdown syntax. I use Rstudio as my IDE. **knitr** is the
+engine that interprets code chunks when using Rstudio, and it supports a
+variety of languages, including R, Python, SQL, JavaScript, and Ruby.
+For a full list of supported languages, type the following command:
+
+`names(knitr::knit_engines$get())`
+
+Citations are done like this \cite{strain_2023}, and point to references.bib
+in the parent directory.
+
+# Using code chunks
+
+Code chunks can be inserted using a button in the top right corner of
+this window, or by using `Alt+shift+I`. Have a look at
+`example_chapter.qmd` in `quarto_chapters` for a demo of this. Figure
+1.1 is produced using an r code chunk.
+
+```{r}
+#| label: my-code-chunk
+#| include: true
+#| fig-cap: "An example of a figure"
+
+# this is an r code chunk
+# generate some numbers, make a dataframe
+
+library(dplyr)
+
+x <- rep(1:10)
+y <- runif(10)
+
+df <- tibble(x, y)
+
+# load plotting library, make basic plot
+
+library(ggplot2)
+
+df %>%
+  ggplot(aes(x = x, y = y)) +
+  geom_smooth(span = 0.5, se = FALSE)
+
+# because we have `include` set to FALSE, output will not be automatically
+# included, we have to specify this in the code chunk (line 40)
+```
+
+# Using other languages
+
+To use other languages, simply label the chunk accordingly. For example:
+
+```{python}
+
+```
+
+You can mix and match different languages throughout your report.
+
+# Models
+
+Knitr includes the ability to cache models. This is very useful if your
+models are especially complex or you have a very large report. This is
+demonstrated below.
+
+```{r}
+#| label: model
+#| eval: !expr params$eval_models
+#| cache: !expr params$eval_models
+
+set.seed(123)                               # Set seed for reproducibility
+x <- 1:100                                  # Predictor variable
+y <- 2 * x + rnorm(100, mean = 0, sd = 10)  # Response variable with noise
+
+data <- data_frame(x, y)
+
+# Fit a linear model
+
+model <- lm(y ~ x, data = data)
+
+# Summary of the model
+
+summary(model)
+```
+
+Setting eval_models to TRUE in line 9 means models are evaluated and
+cached with every knit. Setting to false means that knitr looks for the
+model in the cache, so you only have to set it once! The chunk below
+accomplishes this:
+
+```{r}
+#| label: lazyload-cache
+#| eval: false
+
+if (!params$eval_models){ lazyload_cache_dir("report/pdf") }
+
+# this is a dummy chunk - the proper thing should be included
+# at the top of your report
+# see my GitHub for more concrete examples of model caching
+```
+
+# Using this template
+
+-   chapters should be written using quarto markdown and are located in
+    the `chapters_quarto` folder.
+-   `main.tex` in the top-level directory should be used to specify
+    authors, declarations, abstracts etc.
+-   once chapters are all written, reformat the tex using the function provided 
+    in the `reformat_tex.r` file, then compile `main.tex`.
+
+Itemise is demonstrated above.

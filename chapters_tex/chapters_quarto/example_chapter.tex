@@ -1,0 +1,79 @@
+\documentclass[../main.tex]{subfiles}
+\graphicspath{{collated_images/}{collated_images/}}
+\bibliography{../references.bib}
+\begin{document}
+\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[enhanced, sharp corners, frame hidden, boxrule=0pt, interior hidden, borderline west={3pt}{0pt}{shadecolor}, breakable]}{\end{tcolorbox}}\fi
+
+\hypertarget{how-to-write-thesis-chapters}{%
+\section{How to write thesis
+chapters}\label{how-to-write-thesis-chapters}}
+
+Quarto uses markdown syntax. I use Rstudio as my IDE. \textbf{knitr} is
+the engine that interprets code chunks when using Rstudio, and it
+supports a variety of languages, including R, Python, SQL, JavaScript,
+and Ruby. For a full list of supported languages, type the following
+command:
+
+\texttt{names(knitr::knit\_engines\$get())}
+
+Citations are done like this \cite{strain_2023}, and point to
+references.bib in the parent directory.
+
+\hypertarget{using-code-chunks}{%
+\section{Using code chunks}\label{using-code-chunks}}
+
+Code chunks can be inserted using a button in the top right corner of
+this window, or by using \texttt{Alt+shift+I}. Have a look at
+\texttt{example\_chapter.qmd} in \texttt{quarto\_chapters} for a demo of
+this. Figure 1.1 is produced using an r code chunk.
+
+\begin{figure}
+
+{\centering \includegraphics{example_chapter_files/figure-latex/my-code-chunk-1.pdf}
+
+}
+
+\caption{An example of a figure}
+
+\end{figure}
+
+\hypertarget{using-other-languages}{%
+\section{Using other languages}\label{using-other-languages}}
+
+To use other languages, simply label the chunk accordingly. For example:
+
+You can mix and match different languages throughout your report.
+
+\hypertarget{models}{%
+\section{Models}\label{models}}
+
+Knitr includes the ability to cache models. This is very useful if your
+models are especially complex or you have a very large report. This is
+demonstrated below.
+
+Setting eval\_models to TRUE in line 9 means models are evaluated and
+cached with every knit. Setting to false means that knitr looks for the
+model in the cache, so you only have to set it once! The chunk below
+accomplishes this:
+
+\hypertarget{using-this-template}{%
+\section{Using this template}\label{using-this-template}}
+
+\begin{itemize}
+\tightlist
+\item
+  chapters should be written using quarto markdown and are located in
+  the \texttt{chapters\_quarto} folder.
+\item
+  \texttt{main.tex} in the top-level directory should be used to specify
+  authors, declarations, abstracts etc.
+\item
+  once chapters are all written, use the \texttt{reform\_tex.r} script
+  to reformat the tex and render the main document.
+\end{itemize}
+
+Itemise is demonstrated above.
+
+
+
+\end{document}
