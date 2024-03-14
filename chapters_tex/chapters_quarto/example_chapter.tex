@@ -1,6 +1,6 @@
 \documentclass[../main.tex]{subfiles}
 \begin{document}
-\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[sharp corners, breakable, borderline west={3pt}{0pt}{shadecolor}, interior hidden, frame hidden, boxrule=0pt, enhanced]}{\end{tcolorbox}}\fi
+\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[sharp corners, frame hidden, boxrule=0pt, interior hidden, borderline west={3pt}{0pt}{shadecolor}, enhanced, breakable]}{\end{tcolorbox}}\fi
 
 \hypertarget{how-to-write-thesis-chapters}{%
 \section{How to write thesis
@@ -72,6 +72,47 @@ accomplishes this:
 \end{itemize}
 
 Itemise is demonstrated above.
+
+\hypertarget{labelling}{%
+\section{Labelling}\label{labelling}}
+
+Chapters are referenced as such:
+
+\begin{verbatim}
+\chap{chap:example_chapter}
+\end{verbatim}
+
+As in, in \chap{chap:example_chapter}\ldots{}
+
+Sections are labelled similarly, but you need to type the word
+``Section'' in addition.
+
+\begin{verbatim}
+\ref{labelling}
+\end{verbatim}
+
+As in, in Section \ref{labelling}\ldots{}
+
+You will probably end up with multiple sections called ``Introduction'',
+``Methods'', ``Results'' etc. If this is the case, you can manually
+specify the label for a section like so:
+
+\begin{verbatim}
+# Introduction_test 
+
+# Introduction_test {introduction_test2}
+
+In Section \ref{introduction_test} as opposed to Section \ref{introduction_test2}
+\end{verbatim}
+
+\hypertarget{introduction_test}{%
+\section{Introduction\_test}\label{introduction_test}}
+
+\hypertarget{introduction_test2}{%
+\section{Introduction\_test}\label{introduction_test2}}
+
+In Section \ref{introduction_test} as opposed to Section
+\ref{introduction_test2}
 
 
 

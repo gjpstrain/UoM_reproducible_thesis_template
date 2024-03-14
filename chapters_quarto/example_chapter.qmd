@@ -127,3 +127,34 @@ if (!params$eval_models){ lazyload_cache_dir("report/pdf") }
     in the `reformat_tex.r` file, then compile `main.tex`.
 
 Itemise is demonstrated above.
+
+# Labelling
+
+Chapters are referenced as such:
+
+	\chap{chap:example_chapter}
+	
+As in, in \chap{chap:example_chapter}...
+	
+Sections are labelled similarly, but you need to type the word "Section" in addition.
+
+	\ref{labelling}
+	
+As in, in Section \ref{labelling}...
+
+You will probably end up with multiple sections called "Introduction", "Methods", "Results" etc. If this is the case, you can manually
+specify the label for a section like so:
+
+	# Introduction_test 
+	
+	# Introduction_test {introduction_test2}
+	
+	In Section \ref{introduction_test} as opposed to Section \ref{introduction_test2}
+	
+# Introduction_test 
+	
+# Introduction_test {#introduction_test2}
+
+In Section \ref{introduction_test} as opposed to Section \ref{introduction_test2}
+	
+	
