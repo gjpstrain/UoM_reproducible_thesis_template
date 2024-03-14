@@ -25,7 +25,7 @@
 ## Quirks
 
  - Due to the fonts used, LuaLatex must be used to compile.
- - If you use TinyTex like me, you will need to additionally install the luatex85 package (there is a line in `finalise.r` that does this).
+ - If you use TinyTex like me, you will need to additionally install the luatex85 package (there is a line in `finalise.r` that does this). Overleaf might need you to select this option via the menu.
  - Biber (not BibLatex) must also be used. Overleaf does this automatically, but I had to specify this for TinyTex.
 
 ## Housekeeping
