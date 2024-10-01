@@ -21,6 +21,7 @@
  - **NB: reformatting the `.tex` is important**. Pandoc adds preamables which `main.tex` **does not want**.
  - (Feel free to create a PR to contribute scripts in other languages that achieve this.)
  - My R script uses TinyTex to produce the final thesis, but this is not necessary - uploading a .zip of the thesis to overleaf also works perfectly.
+ - Please read the `finalise_thesis.R` script comments before using it, as you may need to manually install additional fonts.
 
 ## Quirks
 
