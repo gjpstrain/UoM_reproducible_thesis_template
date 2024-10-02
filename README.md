@@ -28,6 +28,13 @@
  - Due to the fonts used, LuaLatex must be used to compile.
  - If you use TinyTex like me, you will need to additionally install the luatex85 package (there is a line in `finalise.r` that does this). Overleaf might need you to select this option via the menu.
  - Biber (not BibLatex) must also be used. Overleaf does this automatically, but I had to specify this for TinyTex.
+ 
+## Using Trackdown for Collaborative Editing
+
+ - I have used the [Trackdown](https://github.com/ClaudioZandonella/trackdown) package to enable collaborative editing. Set up is relatively involved. In short:
+	- Follow instructions to create Google drive API to sync with local qmd files
+	- Authorise using client id and secret from Google drive API
+	- I have provided `helper_functions.R` to automate up and down syn between qmds and google docs
 
 ## Housekeeping
 
