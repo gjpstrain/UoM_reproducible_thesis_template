@@ -34,7 +34,7 @@
  - I have used the [Trackdown](https://github.com/ClaudioZandonella/trackdown) package to enable collaborative editing. Set up is relatively involved. In short:
 	- Follow instructions to create Google drive API to sync with local qmd files
 	- Authorise using client id and secret from Google drive API
-	- I have provided `helper_functions.R` to automate up and down syn between qmds and google docs
+	- I have provided `helper_functions.R` to automate up and down sync between qmds and google docs
 
 ## Housekeeping
 
