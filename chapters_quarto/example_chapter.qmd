@@ -35,11 +35,11 @@ in the parent directory.
 
 Code chunks can be inserted using a button in the top right corner of
 this window, or by using `Alt+shift+I`. Have a look at
-`example_chapter.qmd` in `quarto_chapters` for a demo of this. Figure
-1.1 is produced using an r code chunk.
+`example_chapter.qmd` in `quarto_chapters` for a demo of this. @fig-example
+is produced using an r code chunk.
 
 ```{r}
-#| label: my-code-chunk
+#| label: fig-example
 #| include: true
 #| fig-cap: "An example of a figure"
 
@@ -67,7 +67,19 @@ df %>%
 
 # Using other languages
 
-To use other languages, simply label the chunk accordingly. For example:
+To use other languages, simply label the chunk accordingly. Doing this
+will require installation of the appropriate package - using python
+requires the `reticulate` package.
+
+```{r}
+#| label: install-retiuculate
+#| include: false
+
+#install.packages("reticulate")
+library(reticulate)
+```
+
+For an example, see the .qmd file associated with this chapter.
 
 ```{python}
 
@@ -132,29 +144,41 @@ Itemise is demonstrated above.
 
 Chapters are referenced as such:
 
-	\chap{chap:example_chapter}
+  \chap{chap:example_chapter}
 	
 As in, in \chap{chap:example_chapter}...
 	
 Sections are labelled similarly, but you need to type the word "Section" in addition.
-
-	\ref{labelling}
 	
 As in, in Section \ref{labelling}...
 
 You will probably end up with multiple sections called "Introduction", "Methods", "Results" etc. If this is the case, you can manually
 specify the label for a section like so:
 
-	# Introduction_test 
-	
-	# Introduction_test {introduction_test2}
-	
-	In Section \ref{introduction_test} as opposed to Section \ref{introduction_test2}
-	
 # Introduction_test 
 	
 # Introduction_test {#introduction_test2}
 
 In Section \ref{introduction_test} as opposed to Section \ref{introduction_test2}
+
+	# Introduction_test 
+	
+	# Introduction_test {#introduction_test2}
+	
+	In Section \ref{introduction_test} as opposed to Section \ref{introduction_test2}
+	
+In Section \ref{introduction_test} as opposed to Section \ref{introduction_test2}
+
+## Labelling Figures
+
+  `Figures are labelled as so: in @fig-example, we can see...`
+  
+Figures are labelled as so: in @fig-example, we can see...
+
+If you are not generating figures from code, but rather including them using
+knitr::include_graphics(), you must set the out-height and out-width to NA to prevent
+LaTeX from trying to manually size them.
+	
+
 	
 	
