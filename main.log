@@ -1,4 +1,4 @@
-This is LuaHBTeX, Version 1.18.0 (TeX Live 2024)  (format=lualatex 2024.9.26)  3 OCT 2024 14:18
+This is LuaHBTeX, Version 1.18.0 (TeX Live 2024)  (format=lualatex 2024.10.7)  7 OCT 2024 13:01
  restricted system commands enabled.
 **main.tex
 (./main.tex
@@ -694,13 +694,13 @@ Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
 \@lastruleclass=\count339
 \@thisrulewidth=\dimen295
 ) (c:/Users/mbch4gs2/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/babel/babel.sty
-Package: babel 2024/09/18 v24.10 The Babel package
+Package: babel 2024/10/05 v24.11 The Babel package
 (c:/Users/mbch4gs2/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/babel/babel.def
-File: babel.def 2024/09/18 v24.10 Babel common definitions
+File: babel.def 2024/10/05 v24.11 Babel common definitions
 ) (c:/Users/mbch4gs2/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/babel/luababel.def
 \bbl@readstream=\read5
 \l@dumylang=\language2
-Package babel Info: Non-standard hyphenation setup on input line 117.
+Package babel Info: Non-standard hyphenation setup on input line 118.
 \l@nohyphenation=\language3
 \l@vietnamese=\language4
 \l@hebrew=\language5
@@ -1234,7 +1234,7 @@ Overfull \hbox (2.46695pt too wide) in paragraph at lines 152--152
 ]
 Chapter 1.
 (./chapters_tex/chapters_quarto/example_chapter.tex
-<chapters_tex/chapters_quarto/example_chapter_files/figure-latex/fig-example-1.pdf, id=144, 397.485pt x 252.945pt>
+<chapters_tex/chapters_quarto/example_chapter_files/figure-latex/fig-example-1.pdf, id=146, 397.485pt x 252.945pt>
 File: chapters_tex/chapters_quarto/example_chapter_files/figure-latex/fig-example-1.pdf Graphic file (type pdf)
 <use chapters_tex/chapters_quarto/example_chapter_files/figure-latex/fig-example-1.pdf>
 Package luatex.def Info: chapters_tex/chapters_quarto/example_chapter_files/figure-latex/fig-example-1.pdf  used on input line 30.
@@ -1282,18 +1282,18 @@ Package logreq Info: Writing requests to 'main.run.xml'.
 )
 
 Here is how much of LuaTeX's memory you used:
- 37832 strings out of 475910
+ 37834 strings out of 475910
  125165,1977958 words of node,token memory allocated
  811 words of node memory still in use:
    6 hlist, 2 vlist, 2 rule, 2 glue, 4 kern, 1 glyph, 9 attribute, 112 glue_spec, 9 attribute_list, 2 write, 2 pdf_action nodes
-   avail lists: 1:1,2:668,3:244,4:40,5:481,6:71,7:7412,8:59,9:381,10:11,11:531
- 59584 multiletter control sequences out of 65536+600000
+   avail lists: 1:1,2:694,3:254,4:44,5:483,6:74,7:7412,8:59,9:397,10:11,11:531
+ 59583 multiletter control sequences out of 65536+600000
  56 fonts using 5769095 bytes
  104i,6n,117p,1180b,2616s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <c:/Users/mbch4gs2/AppData/Roaming/TinyTeX/texmf-dist/fonts/opentype/public/lm/lmmono12-regular.otf><c:/Users/mbch4gs2/AppData/Roaming/TinyTeX/texmf-dist/fonts/opentype/public/tex-gyre/texgyretermes-italic.otf><c:/Users/mbch4gs2/AppData/Roaming/TinyTeX/texmf-dist/fonts/opentype/public/tex-gyre/texgyretermes-regular.otf><c:/Users/mbch4gs2/AppData/Roaming/TinyTeX/texmf-dist/fonts/opentype/public/tex-gyre/texgyretermes-bold.otf>
-Output written on main.pdf (18 pages, 206565 bytes).
+Output written on main.pdf (18 pages, 207527 bytes).
 
-PDF statistics: 303 PDF objects out of 1000 (max. 8388607)
- 60 named destinations out of 1000 (max. 131072)
- 239 words of extra memory for PDF output out of 10000 (max. 100000000)
+PDF statistics: 310 PDF objects out of 1000 (max. 8388607)
+ 63 named destinations out of 1000 (max. 131072)
+ 247 words of extra memory for PDF output out of 10000 (max. 100000000)
 

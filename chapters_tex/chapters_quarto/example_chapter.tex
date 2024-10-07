@@ -109,7 +109,7 @@ In Section \ref{introduction_test} as opposed to Section \ref{introduction_test2
 In Section \ref{introduction_test} as opposed to Section
 \ref{introduction_test2}
 
-\subsection{Labelling Figures}\label{labelling-figures}
+\section{Labelling Figures}\label{labelling-figures}
 
 \texttt{Figures\ are\ labelled\ as\ so:\ in\ @fig-example,\ we\ can\ see...}
 
@@ -119,6 +119,31 @@ see\ldots{}
 If you are not generating figures from code, but rather including them
 using knitr::include\_graphics(), you must set the out-height and
 out-width to NA to prevent LaTeX from trying to manually size them.
+
+\section{Lists}\label{lists}
+
+Lists use normal markdown syntax. Unnumbered lists are as so:
+
+here's a list:
+
+\begin{itemize}
+\tightlist
+\item
+  item 1
+\item
+  items 2
+\end{itemize}
+
+And numbered lists:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  item 1
+\item
+  item 2
+\end{enumerate}
 
 
 

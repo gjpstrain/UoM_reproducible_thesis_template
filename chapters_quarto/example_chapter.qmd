@@ -169,7 +169,7 @@ In Section \ref{introduction_test} as opposed to Section \ref{introduction_test2
 	
 In Section \ref{introduction_test} as opposed to Section \ref{introduction_test2}
 
-## Labelling Figures
+# Labelling Figures
 
   `Figures are labelled as so: in @fig-example, we can see...`
   
@@ -178,7 +178,18 @@ Figures are labelled as so: in @fig-example, we can see...
 If you are not generating figures from code, but rather including them using
 knitr::include_graphics(), you must set the out-height and out-width to NA to prevent
 LaTeX from trying to manually size them.
-	
 
+# Lists
+
+Lists use normal markdown syntax. Unnumbered lists are as so:
 	
+here's a list:
+  
+  - item 1
+  - items 2
+  
+And numbered lists:
+
+  1. item 1
+  2. item 2
 	
