@@ -6,19 +6,26 @@ replace_before_document <- function(file_path) {
     new_lines <- c("\\documentclass[../main.tex]{subfiles}",
                    lines[(preamble_index):length(lines)])
     
+    # Remove \maketitle
     new_lines <- grep("\\\\maketitle", new_lines, invert = TRUE, value = TRUE)
+
+    new_lines <- gsub(
+      "(\\\\includegraphics)(\\[[^\\]]*\\])?(\\{[^\\}]+\\})", 
+      "\\\\includegraphics[width=\\\\textwidth\\2]\\3", 
+      new_lines, 
+      perl = TRUE
+    )
     
-    new_content <- paste(new_lines, collapse = "\n")
-    writeLines(new_content, file_path)
-    cat("Replaced preamble and removed \\maketitle in", file_path, "\n")
+    writeLines(new_lines, file_path)
+    cat("Replaced preamble, removed \\maketitle, and modified \\includegraphics in", file_path, "\n")
   } else {
     cat("No \\begin{document} found in", file_path, "\n")
   }
 }
 
-# create function
-
 replace_before_document_in_folder <- function(folder_path) {
   files <- list.files(folder_path, pattern = "\\.tex$", full.names = TRUE)
   lapply(files, replace_before_document)
 }
+
+
