@@ -11,6 +11,9 @@ knitr:
   opts_chunk: 
     cache_comments: false
     crop: true      # this is a perl script that crops images
+    out-width: NA   # for an easier time with figure sizes, let knitr handle these
+    out-height: NA  # as above
+    cache.path: "../thesis_cache/" # add in thesis cache directory
     
 execute: 
   echo: false       # echo tells knitr whether to display code (not just output)
@@ -27,7 +30,7 @@ all papers and my final thesis. In writing my [thesis](link_here), I developed
 this template in case anyone else wanted to have a go at writing a fully
 reproducible thesis. I am an R user exclusively, so I wrote my thesis using
 [quarto](https://quarto.org/) and the [Rstudio](https://posit.co/download/rstudio-desktop/)
-Integrated Developement Environment, although everything here also works
+Integrated Development Environment, although everything here also works
 with [VS Code])(https://code.visualstudio.com/). In this example chapter, I cover:
 
  - The general workflow for using the template.
@@ -69,8 +72,6 @@ writing your fully-reproducible thesis. The general workflow is provided below:
 #| label: fig-exp-illustrate
 #| include: true
 #| fig-cap: Edit this section in `main.tex` to specify your chapters and chapter labels.
-#| out-width: NA
-#| out-height: NA
 # find png in the supplied graphics folder
 
 # include pre-rendered graphics
@@ -102,10 +103,10 @@ superscript^2^ / subscript~2~ are done like this:
 
 In this thesis template, numerical citations are used, with a single, long
 bibliography inserted at the end. `references.bib` is kept in the parent
-directory. In-text citations are done like this: `...as in @strain_2023...`, producing
+directory. In-text citations are done like this: `...found in previous work @strain_2023...`, producing
 this text:
 
-...as in @strain_2023...
+...found in previous work @strain_2023...
 
 ### Cross-Referencing
 
@@ -127,7 +128,6 @@ You will probably end up with multiple sections called "Introduction",
 label for a section like so:
 
 ```
-
 # Introduction_test {#introduction_chapter_1}
 
 # Introduction_test {#introduction_chapter_2}
@@ -151,7 +151,6 @@ to any chapter, section, figure, or table like so:
 \pageref{tbl-example} # table
 
 ```
-
 You have two options for referencing figures and tables. If you are referencing
 something in the same .qmd you are writing in, you can use the `@` symbol like so:
 
@@ -165,10 +164,26 @@ you need to manually add in "Figure" and "Table", so writing this:
 
 `...as we can see in Figure \ref{fig-example} and Table \ref{tbl-example}...` produces the following:
 
-...as we can see in Figure \ref{fig-example} and Table \ref{tbl-example}..
+...as we can see in Figure \ref{fig-example} and Table \ref{tbl-example}...
 
 
-# Using Code Chunks
+# Figures & Tables
+
+For reproducibility, figures and tables should be generated from code using
+code chunks. If you have pre-rendered graphics, such as screenshots of experiments or
+figures that are taken from other published work, you can use `knitr::include_graphics()`
+to include them, just as you would in native LaTeX. Below is a code chunk that
+accomplishes this:
+
+````
+```{r}
+#| label: fig-include-graphics
+#| include: true
+#| fig-cap: Placeholder figure caption.
+
+knitr::include_graphics(path = "../supplied_graphics/chapters_tex_example.png", dpi = NA)
+```
+````
 
 Code chunks can be inserted using a button in the top right corner of this
 window, or by using `Alt+shift+I`. Have a look at `example_chapter.qmd` in
@@ -236,18 +251,6 @@ summary(model)
 Setting eval_models to TRUE in the YAML header means models are evaluated and cached with
 every knit. Setting to false means that knitr looks for the model in the cache,
 so you only have to build it once! The chunk below accomplishes this:
-
-```{r}
-#| label: lazyload-cache
-#| eval: false
-#| echo: true
-
-if (!params$eval_models){ lazyload_cache_dir("report/pdf") }
-
-# this is a dummy chunk - the proper thing should be included
-# at the top of your report
-# see my GitHub for more concrete examples of model caching
-```
 
 You should do this for every separate chapter that requires cached models.
 

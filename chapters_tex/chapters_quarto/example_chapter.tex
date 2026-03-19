@@ -2,10 +2,43 @@
 \begin{document}
 
 
-\section{How to write thesis
-chapters}\label{how-to-write-thesis-chapters}
+\section{Introduction}\label{introduction}
 
-Quarto uses markdown syntax. I use Rstudio as my IDE. \textbf{knitr} is
+Welcome to the unofficial University of Manchester reproducible thesis
+template. My PhD project was done in an entirely open and reproducible
+manner, including all papers and my final thesis. In writing my
+\href{link_here}{thesis}, I developed this template in case anyone else
+wanted to have a go at writing a fully reproducible thesis. I am an R
+user exclusively, so I wrote my thesis using
+\href{https://quarto.org/}{quarto} and the
+\href{https://posit.co/download/rstudio-desktop/}{Rstudio} Integrated
+Development Environment, although everything here also works with {[}VS
+Code{]})(https://code.visualstudio.com/). In this example chapter, I
+cover:
+
+\begin{itemize}
+\tightlist
+\item
+  The general workflow for using the template.
+\item
+  How to write using quarto-flavoured markdown.
+\item
+  How to use citations, cross-referencing, and labels.
+\item
+  How to use code chunks to generate figures and tables, including how
+  to use pre-rendered graphics.
+\item
+  How to use code chunks for data wrangling and statistical modelling.
+\item
+  How to dynamically include the outputs of those code chunks in-text.
+\item
+  How to use the scripts provided to render your final document.
+\end{itemize}
+
+\subsection{A Note for Users of Other
+Languages}\label{a-note-for-users-of-other-languages}
+
+Quarto uses markdown syntax. I use Rstudio as my IDE. \texttt{knitr} is
 the engine that interprets code chunks when using Rstudio, and it
 supports a variety of languages, including R, Python, SQL, JavaScript,
 and Ruby. For a full list of supported languages, type the following
@@ -13,77 +46,97 @@ command:
 
 \texttt{names(knitr::knit\_engines\$get())}
 
-Citations are done like this \cite{strain_2023}, and point to
-references.bib in the parent directory.
+\section{Workflow and Writing}\label{workflow-and-writing}
 
-\section{Using code chunks}\label{using-code-chunks}
+\subsection{The Workflow}\label{the-workflow}
 
-Code chunks can be inserted using a button in the top right corner of
-this window, or by using \texttt{Alt+shift+I}. Have a look at
-\texttt{example\_chapter.qmd} in \texttt{quarto\_chapters} for a demo of
-this. Figure~\ref{fig-example} is produced using an r code chunk.
+This template has been set up to make it as easy as possible to get
+started writing your fully-reproducible thesis. The general workflow is
+provided below:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Chapters are stored as \texttt{.qmd} files in the
+  \texttt{chapters\_quarto} folder in the parent directory. You should
+  write each chapter separately using these files.
+\item
+  Once you are happy with a draft of a chapter, add it to the
+  \texttt{\%\ CHAPTERS\ \%} list in \texttt{main.tex}.
+  \textbf{?@fig-chapters-tex} shows how to do this, and it must be done
+  for every chapter.
+\item
+  Before producing a final thesis version, make sure to edit
+  \texttt{main.tex} with your chapters, author information,
+  declarations, abstracts, and acknowledgements.
+\item
+  Finally, use the \texttt{finalise\_thesis.R} script to render each
+  chapter to a \texttt{.tex}, reformat the \texttt{.tex}, then knit them
+  all together into the final thesis .pdf.
+\end{enumerate}
 
 \begin{figure}
 
 \centering{
 
-\includegraphics{example_chapter_files/figure-latex/fig-example-1.pdf}
+\includegraphics[width=\textwidth]{../supplied_graphics/chapters_tex_example.png}
 
 }
 
-\caption{\label{fig-example}An example of a figure}
+\caption{\label{fig-exp-illustrate}Edit this section in
+\texttt{main.tex} to specify your chapters and chapter labels.}
 
 \end{figure}%
 
-\section{Using other languages}\label{using-other-languages}
+\subsection{Writing With Quarto
+Markdown}\label{writing-with-quarto-markdown}
 
-To use other languages, simply label the chunk accordingly. Doing this
-will require installation of the appropriate package - using python
-requires the \texttt{reticulate} package.
+\subsubsection{The Basics}\label{the-basics}
 
-For an example, see the .qmd file associated with this chapter.
+Quarto.org provides a great
+\href{https://quarto.org/docs/authoring/markdown-basics.html}{guide} to
+writing with quarto markdown. Ignore the image links, but everything
+else works as documented. In brief:
 
-You can mix and match different languages throughout your report.
+\emph{italics}, \textbf{bold}, \textbf{\emph{bold italics}} are done
+like this:
 
-\section{Models}\label{models}
+\texttt{*italics*,\ **bold**,\ ***bold\ italics***}
 
-Knitr includes the ability to cache models. This is very useful if your
-models are especially complex or you have a very large report. This is
-demonstrated below.
+superscript\textsuperscript{2} / subscript\textsubscript{2} are done
+like this:
 
-Setting eval\_models to TRUE in line 9 means models are evaluated and
-cached with every knit. Setting to false means that knitr looks for the
-model in the cache, so you only have to set it once! The chunk below
-accomplishes this:
+\texttt{superscript\^{}2\^{}\ /\ subscript\textasciitilde{}2\textasciitilde{}}
 
-\section{Using this template}\label{using-this-template}
+\texttt{verbatim\ code} is done like this:
 
-\begin{itemize}
-\tightlist
-\item
-  chapters should be written using quarto markdown and are located in
-  the \texttt{chapters\_quarto} folder.
-\item
-  \texttt{main.tex} in the top-level directory should be used to specify
-  authors, declarations, abstracts etc.
-\item
-  once chapters are all written, reformat the tex using the function
-  provided in the \texttt{reformat\_tex.r} file, then compile
-  \texttt{main.tex}.
-\end{itemize}
+\texttt{verbatim\ code}
 
-Itemise is demonstrated above.
+\subsubsection{Citations}\label{citations}
 
-\section{Labelling}\label{labelling}
+In this thesis template, numerical citations are used, with a single,
+long bibliography inserted at the end. \texttt{references.bib} is kept
+in the parent directory. In-text citations are done like this:
+\texttt{...found\ in\ previous\ work\ @strain\_2023...}, producing this
+text:
+
+\ldots found in previous work @strain\_2023\ldots{}
+
+\subsubsection{Cross-Referencing}\label{cross-referencing}
 
 Chapters are referenced as such:
 
-\chap{chap:example_chapter}
+\texttt{As\ we\ can\ see\ in\ \textbackslash{}chap\{chap:example\_chapter\}...},
+which produces the following:
 
-As in, in \chap{chap:example_chapter}\ldots{}
+As we can see in \chap{chap:example_chapter}\ldots{}
 
-Sections are labelled similarly, but you need to type the word
+Sections are referenced similarly, but you need to type the word
 ``Section'' in addition.
+
+\texttt{As\ in,\ in\ Section\ \textbackslash{}ref\{labelling\}...}
+produces the following:
 
 As in, in Section \ref{labelling}\ldots{}
 
@@ -91,23 +144,177 @@ You will probably end up with multiple sections called ``Introduction'',
 ``Methods'', ``Results'' etc. If this is the case, you can manually
 specify the label for a section like so:
 
-\section{Introduction\_test}\label{introduction_test}
-
-\section{Introduction\_test}\label{introduction_test2}
-
-In Section \ref{introduction_test} as opposed to Section
-\ref{introduction_test2}
-
 \begin{verbatim}
-# Introduction_test 
+# Introduction_test {#introduction_chapter_1}
 
-# Introduction_test {#introduction_test2}
-
-In Section \ref{introduction_test} as opposed to Section \ref{introduction_test2}
+# Introduction_test {#introduction_chapter_2}
 \end{verbatim}
 
-In Section \ref{introduction_test} as opposed to Section
-\ref{introduction_test2}
+Which allows you to do the following:
+
+In Section X as opposed to Section Y.
+
+Pages are referenced using \texttt{\textbackslash{}pageref\{\}}. This
+does not automatically include the word ``page'', so you need to
+manually add that in. You can point \texttt{pageref\{\}} to any chapter,
+section, figure, or table like so:
+
+\begin{verbatim}
+\pageref{chap:example_chapter} # chapter
+
+\pageref{introduction_chapter_1} # section
+
+\pageref{fig-example} # figure
+
+\pageref{tbl-example} # table
+\end{verbatim}
+
+You have two options for referencing figures and tables. If you are
+referencing something in the same .qmd you are writing in, you can use
+the \texttt{@} symbol like so:
+
+\texttt{...as\ we\ can\ see\ in\ @fig-example\ and\ @tbl-example...},
+which produces the following:
+
+\ldots as we can see in Figure~\ref{fig-example} and
+\textbf{?@tbl-example}\ldots{}
+
+If you are referencing across different chapters, you need to use native
+LaTeX referencing style (the same as we use for sections and pages).
+When doing this, you need to manually add in ``Figure'' and ``Table'',
+so writing this:
+
+\texttt{...as\ we\ can\ see\ in\ Figure\ \textbackslash{}ref\{fig-example\}\ and\ Table\ \textbackslash{}ref\{tbl-example\}...}
+produces the following:
+
+\ldots as we can see in Figure \ref{fig-example} and Table
+\ref{tbl-example}\ldots{}
+
+\section{Figures \& Tables}\label{figures-tables}
+
+For reproducibility, figures and tables should be generated from code
+using code chunks. If you have pre-rendered graphics, such as
+screenshots of experiments or figures that are taken from other
+published work, you can use \texttt{knitr::include\_graphics()} to
+include them, just as you would in native LaTeX. Below is a code chunk
+that accomplishes this:
+
+\begin{verbatim}
+
+::: {.cell}
+::: {.cell-output-display}
+![Placeholder figure caption.](../supplied_graphics/chapters_tex_example.png){#fig-include-graphics width=NA height=NA}
+:::
+:::
+\end{verbatim}
+
+Code chunks can be inserted using a button in the top right corner of
+this window, or by using \texttt{Alt+shift+I}. Have a look at
+\texttt{example\_chapter.qmd} in \texttt{quarto\_chapters} for a demo of
+this. Figure~\ref{fig-example} is produced using an r code chunk. All
+code chunks are set to \texttt{echo:\ TRUE} in this example chapter so
+that the pdf renders the chunk.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# this is an r code chunk}
+\CommentTok{\# generate some numbers, make a dataframe}
+
+\FunctionTok{library}\NormalTok{(dplyr)}
+
+\NormalTok{x }\OtherTok{\textless{}{-}} \FunctionTok{rep}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{10}\NormalTok{)}
+\NormalTok{y }\OtherTok{\textless{}{-}} \FunctionTok{runif}\NormalTok{(}\DecValTok{10}\NormalTok{)}
+
+\NormalTok{df }\OtherTok{\textless{}{-}} \FunctionTok{tibble}\NormalTok{(x, y)}
+
+\CommentTok{\# load plotting library, make basic plot}
+
+\FunctionTok{library}\NormalTok{(ggplot2)}
+
+\NormalTok{df }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ x, }\AttributeTok{y =}\NormalTok{ y)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_smooth}\NormalTok{(}\AttributeTok{span =} \FloatTok{0.5}\NormalTok{, }\AttributeTok{se =} \ConstantTok{FALSE}\NormalTok{)}
+
+\CommentTok{\# because we have \textasciigrave{}include\textasciigrave{} set to FALSE in the YAML header, output will not be automatically}
+\CommentTok{\# included. Instead, we have to specify this in the code chunk (line 43 in the .qmd)}
+\CommentTok{\# echo is set to TRUE in the chunk to display this chunk/code}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+\centering{
+
+\includegraphics[width=\textwidth]{example_chapter_files/figure-latex/fig-example-1.pdf}
+
+}
+
+\caption{\label{fig-example}An example of a figure}
+
+\end{figure}%
+
+\section{Models}\label{models}
+
+Knitr includes the ability to cache models. This is very useful if your
+models are especially complex or you have a very large report. This is
+demonstrated below.
+
+Setting eval\_models to TRUE in the YAML header means models are
+evaluated and cached with every knit. Setting to false means that knitr
+looks for the model in the cache, so you only have to build it once! The
+chunk below accomplishes this:
+
+You should do this for every separate chapter that requires cached
+models.
+
+\section{Using this template}\label{using-this-template}
+
+\section{Labelling \& Referencing}\label{labelling-referencing}
+
+\subsection{Chapters, Sections, and
+Pages}\label{chapters-sections-and-pages}
+
+Chapters are referenced as such:
+
+\texttt{\textbackslash{}chap\{chap:example\_chapter\}}
+
+As in, in \chap{chap:example_chapter}\ldots{}
+
+Sections are labelled similarly, but you need to type the word
+``Section'' in addition.
+
+\texttt{As\ in,\ in\ Section\ \textbackslash{}ref\{labelling\}...}
+
+As in, in Section \ref{labelling}\ldots{}
+
+You will probably end up with multiple sections called ``Introduction'',
+``Methods'', ``Results'' etc. If this is the case, you can manually
+specify the label for a section like so:
+
+\begin{verbatim}
+
+# Introduction_test {#introduction_chapter_1}
+
+# Introduction_test {#introduction_chapter_2}
+\end{verbatim}
+
+In Section \ref{introduction_chapter_1} as opposed to Section
+\ref{introduction_chapter_2}
+
+Pages are referenced using \texttt{\textbackslash{}pageref\{\}}. This
+does not automatically include the word ``page'', so you need to
+manually add that in. You can point \texttt{pageref\{\}} to any chapter,
+section, figure, or table like so:
+
+\begin{verbatim}
+\pageref{chap:example_chapter} # chapter
+
+\pageref{introduction_chapter_1} # section
+
+\pageref{fig-example} # figure
+
+\pageref{tbl-example} # table
+\end{verbatim}
 
 \section{Labelling Figures}\label{labelling-figures}
 

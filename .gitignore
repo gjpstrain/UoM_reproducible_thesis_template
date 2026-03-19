@@ -11,3 +11,5 @@
 *.xmpi
 
 /.quarto/
+
+**/*.quarto_ipynb

@@ -16,7 +16,7 @@ quarto_render("chapters_quarto/", output_format = "latex")
 
 # Following command renders only a single chapter:
 
-quarto_render("chapters_quarto/7_belief_change.qmd", output_format = "latex")
+quarto_render("chapters_quarto/example_chapter.qmd", output_format = "latex")
 
 # functions to reformat tex are stored in the local directory
 # these must be run before rendering the final pdf
