@@ -10,7 +10,7 @@ params:
 knitr:
   opts_chunk: 
     cache_comments: false
-    crop: true      # this is a perl script that crops pdfs
+    crop: true      # this is a perl script that crops images
     
 execute: 
   echo: false       # echo tells knitr whether to display code (not just output)
@@ -19,29 +19,168 @@ execute:
   include: false    # whether to include the output of a chunk            
 ---
 
-# How to write thesis chapters
+# Introduction
 
-Quarto uses markdown syntax. I use Rstudio as my IDE. **knitr** is the
-engine that interprets code chunks when using Rstudio, and it supports a
-variety of languages, including R, Python, SQL, JavaScript, and Ruby.
-For a full list of supported languages, type the following command:
+Welcome to the unofficial University of Manchester reproducible thesis template.
+My PhD project was done in an entirely open and reproducible manner, including
+all papers and my final thesis. In writing my [thesis](link_here), I developed
+this template in case anyone else wanted to have a go at writing a fully
+reproducible thesis. I am an R user exclusively, so I wrote my thesis using
+[quarto](https://quarto.org/) and the [Rstudio](https://posit.co/download/rstudio-desktop/)
+Integrated Developement Environment, although everything here also works
+with [VS Code])(https://code.visualstudio.com/). In this example chapter, I cover:
+
+ - The general workflow for using the template.
+ - How to write using quarto-flavoured markdown.
+ - How to use citations, cross-referencing, and labels.
+ - How to use code chunks to generate figures and tables, including how to
+ use pre-rendered graphics.
+ - How to use code chunks for data wrangling and statistical modelling.
+ - How to dynamically include the outputs of those code chunks in-text.
+ - How to use the scripts provided to render your final document.
+ 
+## A Note for Users of Other Languages
+
+Quarto uses markdown syntax. I use Rstudio as my IDE. `knitr` is the engine that
+interprets code chunks when using Rstudio, and it supports a variety of
+languages, including R, Python, SQL, JavaScript, and Ruby. For a full list of
+supported languages, type the following command:
 
 `names(knitr::knit_engines$get())`
 
-Citations are done like this \cite{strain_2023}, and point to references.bib
-in the parent directory.
+# Workflow and Writing
 
-# Using code chunks
+## The Workflow
 
-Code chunks can be inserted using a button in the top right corner of
-this window, or by using `Alt+shift+I`. Have a look at
-`example_chapter.qmd` in `quarto_chapters` for a demo of this. @fig-example
-is produced using an r code chunk.
+This template has been set up to make it as easy as possible to get started
+writing your fully-reproducible thesis. The general workflow is provided below:
+
+ 1. Chapters are stored as `.qmd` files in the `chapters_quarto` folder in the
+ parent directory. You should write each chapter separately using these files.
+ 2. Once you are happy with a draft of a chapter, add it to the `% CHAPTERS %`
+ list in `main.tex`. @fig-chapters-tex shows how to do this, and it must be done
+ for every chapter.
+ 3. Before producing a final thesis version, make sure to edit `main.tex` with
+ your chapters, author information, declarations, abstracts, and acknowledgements.
+ 4. Finally, use the `finalise_thesis.R` script to render each chapter to a `.tex`,
+ reformat the `.tex`, then knit them all together into the final thesis .pdf.
+ 
+```{r}
+#| label: fig-exp-illustrate
+#| include: true
+#| fig-cap: Edit this section in `main.tex` to specify your chapters and chapter labels.
+#| out-width: NA
+#| out-height: NA
+# find png in the supplied graphics folder
+
+# include pre-rendered graphics
+
+knitr::include_graphics(path = "../supplied_graphics/chapters_tex_example.png", dpi = NA)
+```
+
+## Writing With Quarto Markdown
+
+### The Basics
+
+Quarto.org provides a great [guide](https://quarto.org/docs/authoring/markdown-basics.html)
+to writing with quarto markdown. Ignore the image links, but everything else works
+as documented. In brief:
+
+*italics*, **bold**, ***bold italics*** are done like this:
+
+`*italics*, **bold**, ***bold italics***`
+
+superscript^2^ / subscript~2~ are done like this:
+
+`superscript^2^ / subscript~2~`
+
+`verbatim code` is done like this:
+
+``verbatim code``
+
+### Citations
+
+In this thesis template, numerical citations are used, with a single, long
+bibliography inserted at the end. `references.bib` is kept in the parent
+directory. In-text citations are done like this: `...as in @strain_2023...`, producing
+this text:
+
+...as in @strain_2023...
+
+### Cross-Referencing
+
+Chapters are referenced as such:
+
+`As we can see in \chap{chap:example_chapter}...`, which produces the following:
+
+As we can see in \chap{chap:example_chapter}...
+
+Sections are referenced similarly, but you need to type the word "Section" in
+addition.
+
+`As in, in Section \ref{labelling}...` produces the following:
+
+As in, in Section \ref{labelling}...
+
+You will probably end up with multiple sections called "Introduction",
+"Methods", "Results" etc. If this is the case, you can manually specify the
+label for a section like so:
+
+```
+
+# Introduction_test {#introduction_chapter_1}
+
+# Introduction_test {#introduction_chapter_2}
+
+```
+Which allows you to do the following:
+
+In Section X as opposed to Section Y.
+
+Pages are referenced using `\pageref{}`. This does not automatically include
+the word "page", so you need to manually add that in. You can point `pageref{}` 
+to any chapter, section, figure, or table like so:
+
+```
+\pageref{chap:example_chapter} # chapter
+
+\pageref{introduction_chapter_1} # section
+
+\pageref{fig-example} # figure
+
+\pageref{tbl-example} # table
+
+```
+
+You have two options for referencing figures and tables. If you are referencing
+something in the same .qmd you are writing in, you can use the `@` symbol like so:
+
+`...as we can see in @fig-example and @tbl-example...`, which produces the following:
+
+...as we can see in @fig-example and @tbl-example...
+
+If you are referencing across different chapters, you need to use native LaTeX
+referencing style (the same as we use for sections and pages). When doing this,
+you need to manually add in "Figure" and "Table", so writing this:
+
+`...as we can see in Figure \ref{fig-example} and Table \ref{tbl-example}...` produces the following:
+
+...as we can see in Figure \ref{fig-example} and Table \ref{tbl-example}..
+
+
+# Using Code Chunks
+
+Code chunks can be inserted using a button in the top right corner of this
+window, or by using `Alt+shift+I`. Have a look at `example_chapter.qmd` in
+`quarto_chapters` for a demo of this. @fig-example is produced using an r code
+chunk. All code chunks are set to `echo: TRUE` in this example chapter so
+that the pdf renders the chunk.
 
 ```{r}
 #| label: fig-example
 #| include: true
 #| fig-cap: "An example of a figure"
+#| echo: true
 
 # this is an r code chunk
 # generate some numbers, make a dataframe
@@ -61,42 +200,23 @@ df %>%
   ggplot(aes(x = x, y = y)) +
   geom_smooth(span = 0.5, se = FALSE)
 
-# because we have `include` set to FALSE, output will not be automatically
-# included, we have to specify this in the code chunk (line 40)
+# because we have `include` set to FALSE in the YAML header, output will not be automatically
+# included. Instead, we have to specify this in the code chunk (line 43 in the .qmd)
+# echo is set to TRUE in the chunk to display this chunk/code
 ```
 
-# Using other languages
-
-To use other languages, simply label the chunk accordingly. Doing this
-will require installation of the appropriate package - using python
-requires the `reticulate` package.
-
-```{r}
-#| label: install-retiuculate
-#| include: false
-
-#install.packages("reticulate")
-library(reticulate)
-```
-
-For an example, see the .qmd file associated with this chapter.
-
-```{python}
-
-```
-
-You can mix and match different languages throughout your report.
 
 # Models
 
-Knitr includes the ability to cache models. This is very useful if your
-models are especially complex or you have a very large report. This is
-demonstrated below.
+Knitr includes the ability to cache models. This is very useful if your models
+are especially complex or you have a very large report. This is demonstrated
+below.
 
 ```{r}
 #| label: model
 #| eval: !expr params$eval_models
 #| cache: !expr params$eval_models
+#| echo: true
 
 set.seed(123)                               # Set seed for reproducibility
 x <- 1:100                                  # Predictor variable
@@ -113,14 +233,14 @@ model <- lm(y ~ x, data = data)
 summary(model)
 ```
 
-Setting eval_models to TRUE in line 9 means models are evaluated and
-cached with every knit. Setting to false means that knitr looks for the
-model in the cache, so you only have to set it once! The chunk below
-accomplishes this:
+Setting eval_models to TRUE in the YAML header means models are evaluated and cached with
+every knit. Setting to false means that knitr looks for the model in the cache,
+so you only have to build it once! The chunk below accomplishes this:
 
 ```{r}
 #| label: lazyload-cache
 #| eval: false
+#| echo: true
 
 if (!params$eval_models){ lazyload_cache_dir("report/pdf") }
 
@@ -129,67 +249,79 @@ if (!params$eval_models){ lazyload_cache_dir("report/pdf") }
 # see my GitHub for more concrete examples of model caching
 ```
 
+You should do this for every separate chapter that requires cached models.
+
 # Using this template
 
--   chapters should be written using quarto markdown and are located in
-    the `chapters_quarto` folder.
--   `main.tex` in the top-level directory should be used to specify
-    authors, declarations, abstracts etc.
--   once chapters are all written, reformat the tex using the function provided 
-    in the `reformat_tex.r` file, then compile `main.tex`.
 
-Itemise is demonstrated above.
 
-# Labelling
+# Labelling & Referencing
+
+## Chapters, Sections, and Pages
 
 Chapters are referenced as such:
 
-  \chap{chap:example_chapter}
-	
+`\chap{chap:example_chapter}`
+
 As in, in \chap{chap:example_chapter}...
-	
-Sections are labelled similarly, but you need to type the word "Section" in addition.
-	
+
+Sections are labelled similarly, but you need to type the word "Section" in
+addition.
+
+`As in, in Section \ref{labelling}...`
+
 As in, in Section \ref{labelling}...
 
-You will probably end up with multiple sections called "Introduction", "Methods", "Results" etc. If this is the case, you can manually
-specify the label for a section like so:
+You will probably end up with multiple sections called "Introduction",
+"Methods", "Results" etc. If this is the case, you can manually specify the
+label for a section like so:
 
-# Introduction_test 
-	
-# Introduction_test {#introduction_test2}
+```
 
-In Section \ref{introduction_test} as opposed to Section \ref{introduction_test2}
+# Introduction_test {#introduction_chapter_1}
 
-	# Introduction_test 
-	
-	# Introduction_test {#introduction_test2}
-	
-	In Section \ref{introduction_test} as opposed to Section \ref{introduction_test2}
-	
-In Section \ref{introduction_test} as opposed to Section \ref{introduction_test2}
+# Introduction_test {#introduction_chapter_2}
+
+```
+
+In Section \ref{introduction_chapter_1} as opposed to Section
+\ref{introduction_chapter_2}
+
+Pages are referenced using `\pageref{}`. This does not automatically include
+the word "page", so you need to manually add that in. You can point `pageref{}` 
+to any chapter, section, figure, or table like so:
+
+```
+\pageref{chap:example_chapter} # chapter
+
+\pageref{introduction_chapter_1} # section
+
+\pageref{fig-example} # figure
+
+\pageref{tbl-example} # table
+
+```
 
 # Labelling Figures
 
-  `Figures are labelled as so: in @fig-example, we can see...`
-  
+`Figures are labelled as so: in @fig-example, we can see...`
+
 Figures are labelled as so: in @fig-example, we can see...
 
 If you are not generating figures from code, but rather including them using
-knitr::include_graphics(), you must set the out-height and out-width to NA to prevent
-LaTeX from trying to manually size them.
+knitr::include_graphics(), you must set the out-height and out-width to NA to
+prevent LaTeX from trying to manually size them.
 
 # Lists
 
 Lists use normal markdown syntax. Unnumbered lists are as so:
-	
+
 here's a list:
-  
-  - item 1
-  - items 2
-  
+
+-   item 1
+-   items 2
+
 And numbered lists:
 
-  1. item 1
-  2. item 2
-	
+1.  item 1
+2.  item 2
