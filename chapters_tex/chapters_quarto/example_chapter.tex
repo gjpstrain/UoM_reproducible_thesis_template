@@ -4,16 +4,15 @@
 
 \section{Introduction}\label{introduction}
 
-Welcome to the unofficial University of Manchester reproducible thesis
-template. My PhD project was done in an entirely open and reproducible
-manner, including all papers and my final thesis. In writing my
-\href{link_here}{thesis}, I developed this template in case anyone else
-wanted to have a go at writing a fully reproducible thesis. I am an R
-user exclusively, so I wrote my thesis using
-\href{https://quarto.org/}{quarto} and the
-\href{https://posit.co/download/rstudio-desktop/}{Rstudio} Integrated
-Development Environment, although everything here also works with {[}VS
-Code{]})(https://code.visualstudio.com/). In this example chapter, I
+Welcome to the unofficial University of Manchester Reproducible Thesis
+Template. My PhD project was done in an entirely open and reproducible
+manner, including all papers and my final thesis. I developed this
+template in case anyone else wanted to have a go at writing a fully
+reproducible thesis. I am an R user exclusively, so I wrote my thesis
+using Quarto (https://quarto.org/) and the Rstudio
+(https://posit.co/download/rstudio-desktop/) Integrated Development
+Environment, although everything here should also work with VS Code
+(https://code.visualstudio.com/). In this example/tutorial chapter, I
 cover:
 
 \begin{itemize}
@@ -28,9 +27,7 @@ cover:
   How to use code chunks to generate figures and tables, including how
   to use pre-rendered graphics.
 \item
-  How to use code chunks for data wrangling and statistical modelling.
-\item
-  How to dynamically include the outputs of those code chunks in-text.
+  How to use code chunks for statistical modelling.
 \item
   How to use the scripts provided to render your final document.
 \end{itemize}
@@ -46,9 +43,7 @@ command:
 
 \texttt{names(knitr::knit\_engines\$get())}
 
-\section{Workflow and Writing}\label{workflow-and-writing}
-
-\subsection{The Workflow}\label{the-workflow}
+\section{Workflow}\label{workflow}
 
 This template has been set up to make it as easy as possible to get
 started writing your fully-reproducible thesis. The general workflow is
@@ -64,8 +59,8 @@ provided below:
 \item
   Once you are happy with a draft of a chapter, add it to the
   \texttt{\%\ CHAPTERS\ \%} list in \texttt{main.tex}.
-  \textbf{?@fig-chapters-tex} shows how to do this, and it must be done
-  for every chapter.
+  Figure~\ref{fig-chapters-tex} shows how to do this, and it must be
+  done for every chapter.
 \item
   Before producing a final thesis version, make sure to edit
   \texttt{main.tex} with your chapters, author information,
@@ -76,7 +71,7 @@ provided below:
   all together into the final thesis .pdf.
 \end{enumerate}
 
-\begin{figure}
+\begin{figure}[H]
 
 \centering{
 
@@ -84,20 +79,52 @@ provided below:
 
 }
 
-\caption{\label{fig-exp-illustrate}Edit this section in
-\texttt{main.tex} to specify your chapters and chapter labels.}
+\caption{\label{fig-chapters-tex}Edit this section in \texttt{main.tex}
+to specify your chapters and chapter labels.}
 
 \end{figure}%
 
-\subsection{Writing With Quarto
+\section{Writing With Quarto
 Markdown}\label{writing-with-quarto-markdown}
 
-\subsubsection{The Basics}\label{the-basics}
+\subsection{Setting Up}\label{setting-up}
 
-Quarto.org provides a great
-\href{https://quarto.org/docs/authoring/markdown-basics.html}{guide} to
-writing with quarto markdown. Ignore the image links, but everything
-else works as documented. In brief:
+To use this template, you should have a few things installed.
+\texttt{tinytex} is what we will use to render the final thesis.
+\texttt{Quarto} is bundled with newer versions of Rstudio, but if you do
+not have it, you should install it. Install \texttt{tinytex} using the
+following command in the console:
+
+\texttt{install.packages("tinytex")}
+
+Now that you've installed the tinytex package, you need to install the
+TinyTex engine itself using the following:
+
+\texttt{tinytex::install\_tinytex()}
+
+The UoM LaTeX thesis template that this template is based on uses
+LuaTeX, so we need a couple of additional packages to make sure it all
+runs as intended. Run the following commands in the console:
+
+\begin{verbatim}
+tinytex::tlmgr_install("luatex85") # allows us to use luatex
+tinytex::tlmgr_install("tex-gyre") # additional font that we need
+\end{verbatim}
+
+After the YAML header, the first thing you should have is a
+\texttt{setup} chunk. Each time any code chunk in the document is
+manually run, the \texttt{setup} chunk is automatically run first. In
+it, you should load in the packages you need, set up any labelling
+vectors, and deal with function conflicts however you normally do. All
+you need to do is label the chunk \texttt{setup}. The \texttt{.qmd} for
+this tutorial chapter has such a chunk.
+
+\subsection{The Basics}\label{the-basics}
+
+Quarto.org provides a great guide
+(https://quarto.org/docs/authoring/markdown-basics.html) to writing with
+quarto markdown. Ignore the image links, but everything else works as
+documented. In brief:
 
 \emph{italics}, \textbf{bold}, \textbf{\emph{bold italics}} are done
 like this:
@@ -111,19 +138,60 @@ like this:
 
 \texttt{verbatim\ code} is done like this:
 
-\texttt{verbatim\ code}
+\begin{verbatim}
+`verbatim code`
+\end{verbatim}
 
-\subsubsection{Citations}\label{citations}
+Lists, both numbered and unnumbered, use markdown syntax.
+
+\begin{verbatim}
+ - item 1
+ - item 2
+\end{verbatim}
+
+Producing:
+
+\begin{itemize}
+\tightlist
+\item
+  item 1
+\item
+  item 2
+\end{itemize}
+
+And numbered lists:
+
+\begin{verbatim}
+ 1. item 1
+ 2. item 2
+\end{verbatim}
+
+Producing:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  item A
+\item
+  item B
+\end{enumerate}
+
+Footnotes are fully supported\footnote{this is a footnote.}.
+
+\subsection{Citations}\label{citations}
 
 In this thesis template, numerical citations are used, with a single,
 long bibliography inserted at the end. \texttt{references.bib} is kept
 in the parent directory. In-text citations are done like this:
-\texttt{...found\ in\ previous\ work\ @strain\_2023...}, producing this
-text:
 
-\ldots found in previous work @strain\_2023\ldots{}
+\texttt{...as\ found\ in\ previous\ work\ \textbackslash{}cite\{strain\_2023\}...}
 
-\subsubsection{Cross-Referencing}\label{cross-referencing}
+producing this text:
+
+\ldots as found in previous work \cite{strain_2023}\ldots{}
+
+\subsection{Cross-Referencing}\label{cross-referencing}
 
 Chapters are referenced as such:
 
@@ -135,24 +203,24 @@ As we can see in \chap{chap:example_chapter}\ldots{}
 Sections are referenced similarly, but you need to type the word
 ``Section'' in addition.
 
-\texttt{As\ in,\ in\ Section\ \textbackslash{}ref\{labelling\}...}
+\texttt{As\ in,\ in\ Section\ \textbackslash{}ref\{citations\}...}
 produces the following:
 
-As in, in Section \ref{labelling}\ldots{}
+As in, in Section \ref{citations}\ldots{}
 
-You will probably end up with multiple sections called ``Introduction'',
-``Methods'', ``Results'' etc. If this is the case, you can manually
-specify the label for a section like so:
+Over the whole thesis, you will probably end up with multiple sections
+called ``Introduction'', ``Methods'', ``Results'' etc. If this is the
+case, you can manually specify the label for a section like so:
 
 \begin{verbatim}
-# Introduction_test {#introduction_chapter_1}
+# Introduction {#introduction_chapter_2}
 
-# Introduction_test {#introduction_chapter_2}
+# Introduction {#introduction_chapter_3}
 \end{verbatim}
 
 Which allows you to do the following:
 
-In Section X as opposed to Section Y.
+In Section 2.2 as opposed to Section 3.2.
 
 Pages are referenced using \texttt{\textbackslash{}pageref\{\}}. This
 does not automatically include the word ``page'', so you need to
@@ -160,24 +228,24 @@ manually add that in. You can point \texttt{pageref\{\}} to any chapter,
 section, figure, or table like so:
 
 \begin{verbatim}
-\pageref{chap:example_chapter} # chapter
+page \pageref{chap:example_chapter}   # chapter
 
-\pageref{introduction_chapter_1} # section
+page \pageref{introduction_chapter_1} # section
 
-\pageref{fig-example} # figure
+page \pageref{fig-example}            # figure
 
-\pageref{tbl-example} # table
+page \pageref{tbl-example}            # table
 \end{verbatim}
 
 You have two options for referencing figures and tables. If you are
-referencing something in the same .qmd you are writing in, you can use
-the \texttt{@} symbol like so:
+referencing something in the same \texttt{.qmd} you are writing in, you
+can use the \texttt{@} symbol like so:
 
 \texttt{...as\ we\ can\ see\ in\ @fig-example\ and\ @tbl-example...},
 which produces the following:
 
 \ldots as we can see in Figure~\ref{fig-example} and
-\textbf{?@tbl-example}\ldots{}
+Table~\ref{tbl-example}\ldots{}
 
 If you are referencing across different chapters, you need to use native
 LaTeX referencing style (the same as we use for sections and pages).
@@ -193,31 +261,50 @@ produces the following:
 \section{Figures \& Tables}\label{figures-tables}
 
 For reproducibility, figures and tables should be generated from code
-using code chunks. If you have pre-rendered graphics, such as
-screenshots of experiments or figures that are taken from other
-published work, you can use \texttt{knitr::include\_graphics()} to
-include them, just as you would in native LaTeX. Below is a code chunk
-that accomplishes this:
+using code chunks.
 
-\begin{verbatim}
+\subsection{Figures}\label{figures}
 
-::: {.cell}
-::: {.cell-output-display}
-![Placeholder figure caption.](../supplied_graphics/chapters_tex_example.png){#fig-include-graphics width=NA height=NA}
-:::
-:::
-\end{verbatim}
+Quarto offers a number of figure options that you might be familiar with
+as a LaTeX user. At a minimum, figures require:
+
+\begin{itemize}
+\tightlist
+\item
+  A label that begins with \texttt{fig-} and contains no underscores.
+\item
+  The \texttt{include\ =\ TRUE} options so that the figure is displayed.
+\item
+  A figure caption specified by \texttt{fig-cap:\ caption}
+\end{itemize}
+
+I prefer to leave \texttt{fig-height} and \texttt{fig-width} as
+\texttt{NA} in the YAML, and to instead only specify the
+\texttt{fig-asp} (aspect ratio) in each code chunk. This ensures that
+figures always take up the full text width in the resulting pdf
+document.
+
+If you have pre-rendered graphics, such as screenshots of experiments or
+figures that are taken from other published work, you can use
+\texttt{knitr::include\_graphics()} to include them, just as you would
+in native LaTeX. Below is a code chunk that accomplishes this.
+\texttt{include} has been set to false so that the figure itself is not
+displayed.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{knitr}\SpecialCharTok{::}\FunctionTok{include\_graphics}\NormalTok{(}\AttributeTok{path =} \StringTok{"../supplied\_graphics/chapters\_tex\_example.png"}\NormalTok{, }\AttributeTok{dpi =} \ConstantTok{NA}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
 
 Code chunks can be inserted using a button in the top right corner of
 this window, or by using \texttt{Alt+shift+I}. Have a look at
 \texttt{example\_chapter.qmd} in \texttt{quarto\_chapters} for a demo of
-this. Figure~\ref{fig-example} is produced using an r code chunk. All
-code chunks are set to \texttt{echo:\ TRUE} in this example chapter so
-that the pdf renders the chunk.
+this. Figure~\ref{fig-example} is produced using the R code chunk
+directly above it.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{\# this is an r code chunk}
 \CommentTok{\# generate some numbers, make a dataframe}
 
 \FunctionTok{library}\NormalTok{(dplyr)}
@@ -235,9 +322,9 @@ that the pdf renders the chunk.
   \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ x, }\AttributeTok{y =}\NormalTok{ y)) }\SpecialCharTok{+}
   \FunctionTok{geom\_smooth}\NormalTok{(}\AttributeTok{span =} \FloatTok{0.5}\NormalTok{, }\AttributeTok{se =} \ConstantTok{FALSE}\NormalTok{)}
 
-\CommentTok{\# because we have \textasciigrave{}include\textasciigrave{} set to FALSE in the YAML header, output will not be automatically}
-\CommentTok{\# included. Instead, we have to specify this in the code chunk (line 43 in the .qmd)}
-\CommentTok{\# echo is set to TRUE in the chunk to display this chunk/code}
+\CommentTok{\# because we have \textasciigrave{}include\textasciigrave{} set to FALSE in the YAML header,}
+\CommentTok{\# output will not be automatically included.}
+\CommentTok{\# Instead, we have to specify this in the code chunk.}
 \end{Highlighting}
 \end{Shaded}
 
@@ -249,108 +336,166 @@ that the pdf renders the chunk.
 
 }
 
-\caption{\label{fig-example}An example of a figure}
+\caption{\label{fig-example}An example of a figure.}
 
 \end{figure}%
 
-\section{Models}\label{models}
+\subsection{Tables}\label{tables}
+
+Most tables you create will by dynamically generated from models/other
+stats. Otherwise, I prefer to manually create a table in a .csv file,
+store it in the directory, then read it in and use the
+\texttt{kableExtra} package to format it properly. This is much quicker
+and more reproducible than manually creating markdown/LaTeX tables. As
+with figures, chunks that produce tables have several requirements:
+
+\begin{itemize}
+\tightlist
+\item
+  A label that begins with \texttt{tbl-} and contains no underscores.
+\item
+  The \texttt{include\ =\ TRUE} options so that the figure is displayed.
+\item
+  A figure caption specified by \texttt{tbl-cap:\ caption}
+\end{itemize}
+
+Below is a code chunk and the corresponding table that it produces:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# first, read in the csv that the table data lives in}
+
+\NormalTok{table\_df }\OtherTok{\textless{}{-}} \FunctionTok{read\_csv}\NormalTok{(}\StringTok{"../data/table\_data.csv"}\NormalTok{)}
+
+\CommentTok{\# next, use kableExtra to format and produce the table}
+
+\FunctionTok{kbl}\NormalTok{(table\_df, }\AttributeTok{booktabs =} \ConstantTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[!ht]
+
+\caption{\label{tbl-example}An example of a properly formatted table.}
+
+\centering{
+
+\begin{tabular}[t]{lrl}
+\toprule
+Column 1 & Column 2 & Column 3\\
+\midrule
+A & 1 & You\\
+B & 2 & and\\
+C & 3 & Me\\
+\bottomrule
+\end{tabular}
+
+}
+
+\end{table}%
+
+\texttt{kableExtra} also includes options for different kinds of LaTeX
+styling. See the awesome\_table\_in\_pdf guide online
+(https://cloud.r-project.org/web/packages/kableExtra/vignettes/awesome\_table\_in\_pdf.pdf)
+for a full \texttt{kableExtra} tutorial.
+
+\section{Models \& Caching}\label{models-caching}
 
 Knitr includes the ability to cache models. This is very useful if your
 models are especially complex or you have a very large report. This is
 demonstrated below.
 
-Setting eval\_models to TRUE in the YAML header means models are
-evaluated and cached with every knit. Setting to false means that knitr
-looks for the model in the cache, so you only have to build it once! The
-chunk below accomplishes this:
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{123}\NormalTok{)                               }\CommentTok{\# Set seed for reproducibility}
+\NormalTok{x }\OtherTok{\textless{}{-}} \DecValTok{1}\SpecialCharTok{:}\DecValTok{100}                                  \CommentTok{\# Predictor variable}
+\NormalTok{y }\OtherTok{\textless{}{-}} \DecValTok{2} \SpecialCharTok{*}\NormalTok{ x }\SpecialCharTok{+} \FunctionTok{rnorm}\NormalTok{(}\DecValTok{100}\NormalTok{, }\AttributeTok{mean =} \DecValTok{0}\NormalTok{, }\AttributeTok{sd =} \DecValTok{10}\NormalTok{)  }\CommentTok{\# Response variable with noise}
+
+\NormalTok{data }\OtherTok{\textless{}{-}} \FunctionTok{data\_frame}\NormalTok{(x, y)}
+
+\CommentTok{\# Fit a linear model}
+
+\NormalTok{model }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x, }\AttributeTok{data =}\NormalTok{ data)}
+
+\CommentTok{\# Summary of the model}
+
+\FunctionTok{summary}\NormalTok{(model)}
+\end{Highlighting}
+\end{Shaded}
+
+Setting \texttt{eval\_models} to \texttt{TRUE} in the YAML header means
+models are evaluated and cached with every knit. Setting to
+\texttt{FALSE} means that knitr looks for the model in the cache, so you
+only have to build it once! I use the \texttt{qwraps2} package to
+lazyload models in at the start of each chapter that includes modelling.
+This example chapter does this (see the \texttt{.qmd}), and it is
+reproduced verbatim below:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# load in cached models}
+
+\ControlFlowTok{if}\NormalTok{ (}\SpecialCharTok{!}\NormalTok{params}\SpecialCharTok{$}\NormalTok{eval\_models)\{ }\FunctionTok{lazyload\_cache\_dir}\NormalTok{(}\StringTok{"../thesis\_cache/"}\NormalTok{) \}}
+\end{Highlighting}
+\end{Shaded}
 
 You should do this for every separate chapter that requires cached
 models.
 
-\section{Using this template}\label{using-this-template}
+\section{Rendering Your Thesis}\label{rendering-your-thesis}
 
-\section{Labelling \& Referencing}\label{labelling-referencing}
+This repository includes two \texttt{.R} scripts that you can use to
+render your thesis. You only need to interact with
+\texttt{finalise\_thesis.R}. Open \texttt{finalise\_thesis.R} and read
+the comments there. There are lines of code there to render all chapters
+(line 6) or render a single chapter (helpful while writing the thesis,
+line 10). After that, use the script to call \texttt{reformat\_tex.R}
+(line 15), then use lines 17 and 18 to use the reformatting script. Once
+that has all run successfully, you can use line 24 to render the final
+thesis pdf.
 
-\subsection{Chapters, Sections, and
-Pages}\label{chapters-sections-and-pages}
+\section{What's Next?}\label{whats-next}
 
-Chapters are referenced as such:
+To ensure full computational reproducibility, we need to make sure that
+people who want to reproduce the thesis in the future can do so using
+the same package versions and computational environment. The best way to
+do this is using a combination of the \texttt{renv} package and Docker.
 
-\texttt{\textbackslash{}chap\{chap:example\_chapter\}}
+\texttt{renv} is an R package that allows you to capture packages,
+versions, and dependencies in your project. Docker is a piece of
+software that allows you to package your project so that people can run
+it virtually in the future.
 
-As in, in \chap{chap:example_chapter}\ldots{}
+\subsection{\texorpdfstring{Capturing Dependencies Using
+\texttt{renv}}{Capturing Dependencies Using renv}}\label{capturing-dependencies-using-renv}
 
-Sections are labelled similarly, but you need to type the word
-``Section'' in addition.
+Once you're happy with your thesis, install the \texttt{renv} package
+using:
 
-\texttt{As\ in,\ in\ Section\ \textbackslash{}ref\{labelling\}...}
+\texttt{install.package("renv")}
 
-As in, in Section \ref{labelling}\ldots{}
+Once you've done that, run the following command in the console:
 
-You will probably end up with multiple sections called ``Introduction'',
-``Methods'', ``Results'' etc. If this is the case, you can manually
-specify the label for a section like so:
+\texttt{renv::init()}
 
-\begin{verbatim}
+This will create several files and folders. The important one is the
+\texttt{renv.lock} file, which will be created in the parent directory.
+This file captures all packages, versions, and dependencies and makes a
+snapshot of them. Once you have the \texttt{renv.lock} file, you are
+ready to move on.
 
-# Introduction_test {#introduction_chapter_1}
+\subsection{Using Docker to Create an
+Image}\label{using-docker-to-create-an-image}
 
-# Introduction_test {#introduction_chapter_2}
-\end{verbatim}
+First, install Docker desktop
+(https://www.docker.com/products/docker-desktop/).
 
-In Section \ref{introduction_chapter_1} as opposed to Section
-\ref{introduction_chapter_2}
-
-Pages are referenced using \texttt{\textbackslash{}pageref\{\}}. This
-does not automatically include the word ``page'', so you need to
-manually add that in. You can point \texttt{pageref\{\}} to any chapter,
-section, figure, or table like so:
-
-\begin{verbatim}
-\pageref{chap:example_chapter} # chapter
-
-\pageref{introduction_chapter_1} # section
-
-\pageref{fig-example} # figure
-
-\pageref{tbl-example} # table
-\end{verbatim}
-
-\section{Labelling Figures}\label{labelling-figures}
-
-\texttt{Figures\ are\ labelled\ as\ so:\ in\ @fig-example,\ we\ can\ see...}
-
-Figures are labelled as so: in Figure~\ref{fig-example}, we can
-see\ldots{}
-
-If you are not generating figures from code, but rather including them
-using knitr::include\_graphics(), you must set the out-height and
-out-width to NA to prevent LaTeX from trying to manually size them.
-
-\section{Lists}\label{lists}
-
-Lists use normal markdown syntax. Unnumbered lists are as so:
-
-here's a list:
-
-\begin{itemize}
-\tightlist
-\item
-  item 1
-\item
-  items 2
-\end{itemize}
-
-And numbered lists:
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\tightlist
-\item
-  item 1
-\item
-  item 2
-\end{enumerate}
+Then, write your Dockerfile. For your thesis, the easiest thing to do is
+to use the Dockerfile that is included in this template repository. Make
+sure to change the version of R you are using (line 2), and the files
+that are added to the container (lines 22-36). Lines 39-64 are
+additional LaTeX packages that I found I needed to knit my thesis
+together within the Docker container. You can leave everything else
+as-is, including the \texttt{renv} relevant commands (lines 8-19).
 
 
 

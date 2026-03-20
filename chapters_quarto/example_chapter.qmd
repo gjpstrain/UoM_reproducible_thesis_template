@@ -1,18 +1,19 @@
 ---
 title: "example_chapter"
-output:
-  format: 
-    latex:
+format:
+  latex:
+    highlight-style: github
+    keep-tex: true
       
 params:
-  eval_models: false
+  eval_models: true
   
 knitr:
   opts_chunk: 
     cache_comments: false
-    crop: true      # this is a perl script that crops images
-    out-width: NA   # for an easier time with figure sizes, let knitr handle these
-    out-height: NA  # as above
+    crop: true                     # this is a perl script that crops images
+    out-width: NA                  # for an easier time with figure sizes, let knitr handle these
+    out-height: NA                 # as above
     cache.path: "../thesis_cache/" # add in thesis cache directory
     
 execute: 
@@ -22,24 +23,41 @@ execute:
   include: false    # whether to include the output of a chunk            
 ---
 
+```{r}
+#| label: setup
+
+# load libraries
+
+library(tidyverse)
+library(kableExtra)
+library(qwraps2)
+```
+
+```{r}
+#| label: retrieve-cached-models-actual
+
+# load in cached models
+
+if (!params$eval_models){ lazyload_cache_dir("../thesis_cache/") }
+```
+
 # Introduction
 
-Welcome to the unofficial University of Manchester reproducible thesis template.
+Welcome to the unofficial University of Manchester Reproducible Thesis Template.
 My PhD project was done in an entirely open and reproducible manner, including
-all papers and my final thesis. In writing my [thesis](link_here), I developed
-this template in case anyone else wanted to have a go at writing a fully
+all papers and my final thesis. I developed this template in case anyone 
+else wanted to have a go at writing a fully
 reproducible thesis. I am an R user exclusively, so I wrote my thesis using
-[quarto](https://quarto.org/) and the [Rstudio](https://posit.co/download/rstudio-desktop/)
-Integrated Development Environment, although everything here also works
-with [VS Code])(https://code.visualstudio.com/). In this example chapter, I cover:
+Quarto (https://quarto.org/) and the Rstudio (https://posit.co/download/rstudio-desktop/)
+Integrated Development Environment, although everything here should also work
+with VS Code (https://code.visualstudio.com/). In this example/tutorial chapter, I cover:
 
  - The general workflow for using the template.
  - How to write using quarto-flavoured markdown.
  - How to use citations, cross-referencing, and labels.
  - How to use code chunks to generate figures and tables, including how to
  use pre-rendered graphics.
- - How to use code chunks for data wrangling and statistical modelling.
- - How to dynamically include the outputs of those code chunks in-text.
+ - How to use code chunks for statistical modelling.
  - How to use the scripts provided to render your final document.
  
 ## A Note for Users of Other Languages
@@ -51,9 +69,7 @@ supported languages, type the following command:
 
 `names(knitr::knit_engines$get())`
 
-# Workflow and Writing
-
-## The Workflow
+# Workflow
 
 This template has been set up to make it as easy as possible to get started
 writing your fully-reproducible thesis. The general workflow is provided below:
@@ -67,23 +83,55 @@ writing your fully-reproducible thesis. The general workflow is provided below:
  your chapters, author information, declarations, abstracts, and acknowledgements.
  4. Finally, use the `finalise_thesis.R` script to render each chapter to a `.tex`,
  reformat the `.tex`, then knit them all together into the final thesis .pdf.
- 
+
 ```{r}
-#| label: fig-exp-illustrate
+#| label: fig-chapters-tex
 #| include: true
+#| fig-pos: "H"
 #| fig-cap: Edit this section in `main.tex` to specify your chapters and chapter labels.
 # find png in the supplied graphics folder
 
 # include pre-rendered graphics
 
-knitr::include_graphics(path = "../supplied_graphics/chapters_tex_example.png", dpi = NA)
+knitr::include_graphics(path = "../supplied_graphics/chapters_tex_example.png",
+                        dpi = NA)
 ```
 
-## Writing With Quarto Markdown
+# Writing With Quarto Markdown
 
-### The Basics
+## Setting Up
 
-Quarto.org provides a great [guide](https://quarto.org/docs/authoring/markdown-basics.html)
+To use this template, you should have a few things installed. `tinytex` is what
+we will use to render the final thesis. `Quarto` is bundled with
+newer versions of Rstudio, but if you do not have it, you should install it. Install
+`tinytex` using the following command in the console:
+
+`install.packages("tinytex")`
+
+Now that you've installed the tinytex package, you need to install the TinyTex
+engine itself using the following:
+
+`tinytex::install_tinytex()`
+
+The UoM LaTeX thesis template that this template is based on uses LuaTeX, so
+we need a couple of additional packages to make sure it all runs as intended. Run
+the following commands in the console:
+
+```
+tinytex::tlmgr_install("luatex85") # allows us to use luatex
+tinytex::tlmgr_install("tex-gyre") # additional font that we need
+```
+
+After the YAML header, the first thing you should have is a `setup` chunk. Each
+time any code chunk in the document is manually run, the `setup` chunk is 
+automatically run first. In it, you should load in the packages you need,
+set up any labelling vectors, and deal with function conflicts however you
+normally do. All you need to do is label the chunk `setup`. The `.qmd` for this
+tutorial chapter has such a chunk.
+
+## The Basics
+
+Quarto.org provides a great guide (https://quarto.org/docs/authoring/markdown-basics.html)
 to writing with quarto markdown. Ignore the image links, but everything else works
 as documented. In brief:
 
@@ -97,18 +145,54 @@ superscript^2^ / subscript~2~ are done like this:
 
 `verbatim code` is done like this:
 
-``verbatim code``
+````
+`verbatim code`
 
-### Citations
+````
+
+Lists, both numbered and unnumbered, use markdown syntax.
+
+````
+ - item 1
+ - item 2
+````
+
+Producing:
+
+ - item 1
+ - item 2
+
+
+And numbered lists:
+
+````
+ 1. item 1
+ 2. item 2
+````
+
+Producing:
+
+
+ 1. item A
+ 2. item B
+ 
+Footnotes are fully supported[^1].
+
+[^1]: this is a footnote.
+
+## Citations {#citations}
 
 In this thesis template, numerical citations are used, with a single, long
 bibliography inserted at the end. `references.bib` is kept in the parent
-directory. In-text citations are done like this: `...found in previous work @strain_2023...`, producing
-this text:
+directory. In-text citations are done like this:
 
-...found in previous work @strain_2023...
+`...as found in previous work \cite{strain_2023}...`
 
-### Cross-Referencing
+producing this text:
+
+...as found in previous work \cite{strain_2023}...
+
+## Cross-Referencing
 
 Chapters are referenced as such:
 
@@ -119,40 +203,40 @@ As we can see in \chap{chap:example_chapter}...
 Sections are referenced similarly, but you need to type the word "Section" in
 addition.
 
-`As in, in Section \ref{labelling}...` produces the following:
+`As in, in Section \ref{citations}...` produces the following:
 
-As in, in Section \ref{labelling}...
+As in, in Section \ref{citations}...
 
-You will probably end up with multiple sections called "Introduction",
+Over the whole thesis, you will probably end up with multiple sections called "Introduction",
 "Methods", "Results" etc. If this is the case, you can manually specify the
 label for a section like so:
 
 ```
-# Introduction_test {#introduction_chapter_1}
+# Introduction {#introduction_chapter_2}
 
-# Introduction_test {#introduction_chapter_2}
+# Introduction {#introduction_chapter_3}
 
 ```
 Which allows you to do the following:
 
-In Section X as opposed to Section Y.
+In Section 2.2 as opposed to Section 3.2.
 
 Pages are referenced using `\pageref{}`. This does not automatically include
-the word "page", so you need to manually add that in. You can point `pageref{}` 
+the word "page", so you need to manually add that in. You can point `pageref{}`
 to any chapter, section, figure, or table like so:
 
 ```
-\pageref{chap:example_chapter} # chapter
+page \pageref{chap:example_chapter}   # chapter
 
-\pageref{introduction_chapter_1} # section
+page \pageref{introduction_chapter_1} # section
 
-\pageref{fig-example} # figure
+page \pageref{fig-example}            # figure
 
-\pageref{tbl-example} # table
+page \pageref{tbl-example}            # table
 
 ```
 You have two options for referencing figures and tables. If you are referencing
-something in the same .qmd you are writing in, you can use the `@` symbol like so:
+something in the same `.qmd` you are writing in, you can use the `@` symbol like so:
 
 `...as we can see in @fig-example and @tbl-example...`, which produces the following:
 
@@ -166,38 +250,53 @@ you need to manually add in "Figure" and "Table", so writing this:
 
 ...as we can see in Figure \ref{fig-example} and Table \ref{tbl-example}...
 
-
 # Figures & Tables
 
 For reproducibility, figures and tables should be generated from code using
-code chunks. If you have pre-rendered graphics, such as screenshots of experiments or
+code chunks.
+
+## Figures
+
+Quarto offers a number of figure options that you might be 
+familiar with as a LaTeX user. At a minimum, figures require:
+
+ - A label that begins with `fig-` and contains no underscores.
+ - The `include = TRUE` options so that the figure is displayed.
+ - A figure caption specified by `fig-cap: caption`
+ 
+I prefer to leave `fig-height` and `fig-width` as `NA` in the YAML, and to instead
+only specify the `fig-asp` (aspect ratio) in each code chunk. This ensures that
+figures always take up the full text width in the resulting pdf document.
+
+If you have pre-rendered graphics, such as screenshots of experiments or
 figures that are taken from other published work, you can use `knitr::include_graphics()`
 to include them, just as you would in native LaTeX. Below is a code chunk that
-accomplishes this:
+accomplishes this. `include` has been set to false so that the figure itself is
+not displayed.
 
-````
 ```{r}
 #| label: fig-include-graphics
 #| include: true
+#| eval: false
+#| echo: true
 #| fig-cap: Placeholder figure caption.
+#| fig-pos: "H"
 
 knitr::include_graphics(path = "../supplied_graphics/chapters_tex_example.png", dpi = NA)
 ```
-````
 
 Code chunks can be inserted using a button in the top right corner of this
 window, or by using `Alt+shift+I`. Have a look at `example_chapter.qmd` in
-`quarto_chapters` for a demo of this. @fig-example is produced using an r code
-chunk. All code chunks are set to `echo: TRUE` in this example chapter so
-that the pdf renders the chunk.
+`quarto_chapters` for a demo of this. @fig-example is produced using the R code
+chunk directly above it.
 
 ```{r}
 #| label: fig-example
 #| include: true
-#| fig-cap: "An example of a figure"
+#| fig-cap: "An example of a figure."
 #| echo: true
+#| fig-asp: 0.5
 
-# this is an r code chunk
 # generate some numbers, make a dataframe
 
 library(dplyr)
@@ -215,13 +314,46 @@ df %>%
   ggplot(aes(x = x, y = y)) +
   geom_smooth(span = 0.5, se = FALSE)
 
-# because we have `include` set to FALSE in the YAML header, output will not be automatically
-# included. Instead, we have to specify this in the code chunk (line 43 in the .qmd)
-# echo is set to TRUE in the chunk to display this chunk/code
+# because we have `include` set to FALSE in the YAML header,
+# output will not be automatically included.
+# Instead, we have to specify this in the code chunk.
 ```
 
+## Tables
 
-# Models
+Most tables you create will by dynamically generated from models/other stats. Otherwise,
+I prefer to manually create a table in a .csv file, store it in the directory,
+then read it in and use the `kableExtra` package to format it properly. This is
+much quicker and more reproducible than manually creating markdown/LaTeX tables.
+As with figures, chunks that produce tables have several requirements:
+
+ - A label that begins with `tbl-` and contains no underscores.
+ - The `include = TRUE` options so that the figure is displayed.
+ - A figure caption specified by `tbl-cap: caption`
+ 
+ Below is a code chunk and the corresponding table that it produces:
+ 
+```{r}
+#| label: tbl-example
+#| include: true
+#| echo: true
+#| tbl-cap: An example of a properly formatted table.
+#| tbl-pos: "!ht"
+
+# first, read in the csv that the table data lives in
+
+table_df <- read_csv("../data/table_data.csv")
+
+# next, use kableExtra to format and produce the table
+
+kbl(table_df, booktabs = TRUE)
+```
+
+`kableExtra` also includes options for different kinds of LaTeX styling. See
+the awesome_table_in_pdf guide online (https://cloud.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_pdf.pdf)
+for a full `kableExtra` tutorial.
+
+# Models & Caching
 
 Knitr includes the ability to cache models. This is very useful if your models
 are especially complex or you have a very large report. This is demonstrated
@@ -229,9 +361,11 @@ below.
 
 ```{r}
 #| label: model
-#| eval: !expr params$eval_models
-#| cache: !expr params$eval_models
 #| echo: true
+#| include: true
+#| eval: !expr params$eval_models  # allows us to use the eval_models on line 9 of the YAML
+#| cache: !expr params$eval_models # allows us to use the eval_models on line 9 of the YAML
+#| results: hide
 
 set.seed(123)                               # Set seed for reproducibility
 x <- 1:100                                  # Predictor variable
@@ -248,83 +382,67 @@ model <- lm(y ~ x, data = data)
 summary(model)
 ```
 
-Setting eval_models to TRUE in the YAML header means models are evaluated and cached with
-every knit. Setting to false means that knitr looks for the model in the cache,
-so you only have to build it once! The chunk below accomplishes this:
+Setting `eval_models` to `TRUE` in the YAML header means models are evaluated and cached with
+every knit. Setting to `FALSE` means that knitr looks for the model in the cache,
+so you only have to build it once! I use the `qwraps2` package to lazyload
+models in at the start of each chapter that includes modelling. This example
+chapter does this (see the `.qmd`), and it is reproduced verbatim below:
+
+```{r}
+#| label: retrieve-cached-models
+#| include: true
+#| echo: true
+
+# load in cached models
+
+if (!params$eval_models){ lazyload_cache_dir("../thesis_cache/") }
+```
 
 You should do this for every separate chapter that requires cached models.
 
-# Using this template
+# Rendering Your Thesis
 
+This repository includes two `.R` scripts that you can use to render your
+thesis. You only need to interact with `finalise_thesis.R`. Open `finalise_thesis.R`
+and read the comments there. There are lines of code there to render all chapters
+(line 6) or render a single chapter (helpful while writing the thesis, line 10).
+After that, use the script to call `reformat_tex.R` (line 15), then use lines 
+17 and 18 to use the reformatting script. Once that has all run successfully, you
+can use line 24 to render the final thesis pdf.
 
+# What's Next?
 
-# Labelling & Referencing
+To ensure full computational reproducibility, we need to make sure that people 
+who want to reproduce the thesis in the future can do so using the same package
+versions and computational environment. The best way to do this is using a combination
+of the `renv` package and Docker.
 
-## Chapters, Sections, and Pages
+`renv` is an R package that allows you to capture packages, versions, and dependencies
+in your project. Docker is a piece of software that allows you to package your
+project so that people can run it virtually in the future.
 
-Chapters are referenced as such:
+## Capturing Dependencies Using `renv`
 
-`\chap{chap:example_chapter}`
+Once you're happy with your thesis, install the `renv` package using:
 
-As in, in \chap{chap:example_chapter}...
+`install.package("renv")`
 
-Sections are labelled similarly, but you need to type the word "Section" in
-addition.
+Once you've done that, run the following command in the console:
 
-`As in, in Section \ref{labelling}...`
+`renv::init()`
 
-As in, in Section \ref{labelling}...
+This will create several files and folders. The important one is the `renv.lock`
+file, which will be created in the parent directory. This file captures all
+packages, versions, and dependencies and makes a snapshot of them. Once you have
+the `renv.lock` file, you are ready to move on.
 
-You will probably end up with multiple sections called "Introduction",
-"Methods", "Results" etc. If this is the case, you can manually specify the
-label for a section like so:
+## Using Docker to Create an Image
 
-```
+First, install Docker desktop (https://www.docker.com/products/docker-desktop/).
 
-# Introduction_test {#introduction_chapter_1}
-
-# Introduction_test {#introduction_chapter_2}
-
-```
-
-In Section \ref{introduction_chapter_1} as opposed to Section
-\ref{introduction_chapter_2}
-
-Pages are referenced using `\pageref{}`. This does not automatically include
-the word "page", so you need to manually add that in. You can point `pageref{}` 
-to any chapter, section, figure, or table like so:
-
-```
-\pageref{chap:example_chapter} # chapter
-
-\pageref{introduction_chapter_1} # section
-
-\pageref{fig-example} # figure
-
-\pageref{tbl-example} # table
-
-```
-
-# Labelling Figures
-
-`Figures are labelled as so: in @fig-example, we can see...`
-
-Figures are labelled as so: in @fig-example, we can see...
-
-If you are not generating figures from code, but rather including them using
-knitr::include_graphics(), you must set the out-height and out-width to NA to
-prevent LaTeX from trying to manually size them.
-
-# Lists
-
-Lists use normal markdown syntax. Unnumbered lists are as so:
-
-here's a list:
-
--   item 1
--   items 2
-
-And numbered lists:
-
-1.  item 1
-2.  item 2
+Then, write your Dockerfile. For your thesis, the easiest thing to do is to
+use the Dockerfile that is included in this template repository. Make sure to
+change the version of R you are using (line 2), and the files that are added to the 
+container (lines 22-36). Lines 39-64 are additional LaTeX packages that I found
+I needed to knit my thesis together within the Docker container. You can leave 
+everything else as-is, including the `renv` relevant commands (lines 8-19).
