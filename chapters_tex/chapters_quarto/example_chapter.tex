@@ -111,8 +111,11 @@ tinytex::tlmgr_install("luatex85") # allows us to use luatex
 tinytex::tlmgr_install("tex-gyre") # additional font that we need
 \end{verbatim}
 
-After the YAML header, the first thing you should have is a
-\texttt{setup} chunk. Each time any code chunk in the document is
+Each chapter must have a YAML header. This specified options that we
+need to successfully render each chapter. I recommend using the same
+YAML header for each chapter, just for convenience After the YAML
+header, the first thing you should have in each \texttt{.qmd} chapter is
+a \texttt{setup} chunk. Each time any code chunk in the document is
 manually run, the \texttt{setup} chunk is automatically run first. In
 it, you should load in the packages you need, set up any labelling
 vectors, and deal with function conflicts however you normally do. All
@@ -273,7 +276,7 @@ as a LaTeX user. At a minimum, figures require:
 \item
   A label that begins with \texttt{fig-} and contains no underscores.
 \item
-  The \texttt{include\ =\ TRUE} options so that the figure is displayed.
+  The \texttt{include:\ true} option so that the figure is displayed.
 \item
   A figure caption specified by \texttt{fig-cap:\ caption}
 \end{itemize}
@@ -288,7 +291,7 @@ If you have pre-rendered graphics, such as screenshots of experiments or
 figures that are taken from other published work, you can use
 \texttt{knitr::include\_graphics()} to include them, just as you would
 in native LaTeX. Below is a code chunk that accomplishes this.
-\texttt{include} has been set to false so that the figure itself is not
+\texttt{eval} has been set to false so that the figure itself is not
 displayed.
 
 \begin{Shaded}
@@ -298,7 +301,7 @@ displayed.
 \end{Shaded}
 
 Code chunks can be inserted using a button in the top right corner of
-this window, or by using \texttt{Alt+shift+I}. Have a look at
+the editing window, or by using \texttt{Ctrl+Alt+I}. Have a look at
 \texttt{example\_chapter.qmd} in \texttt{quarto\_chapters} for a demo of
 this. Figure~\ref{fig-example} is produced using the R code chunk
 directly above it.
@@ -307,8 +310,6 @@ directly above it.
 \begin{Highlighting}[]
 \CommentTok{\# generate some numbers, make a dataframe}
 
-\FunctionTok{library}\NormalTok{(dplyr)}
-
 \NormalTok{x }\OtherTok{\textless{}{-}} \FunctionTok{rep}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{10}\NormalTok{)}
 \NormalTok{y }\OtherTok{\textless{}{-}} \FunctionTok{runif}\NormalTok{(}\DecValTok{10}\NormalTok{)}
 
@@ -316,15 +317,9 @@ directly above it.
 
 \CommentTok{\# load plotting library, make basic plot}
 
-\FunctionTok{library}\NormalTok{(ggplot2)}
-
 \NormalTok{df }\SpecialCharTok{\%\textgreater{}\%}
   \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ x, }\AttributeTok{y =}\NormalTok{ y)) }\SpecialCharTok{+}
   \FunctionTok{geom\_smooth}\NormalTok{(}\AttributeTok{span =} \FloatTok{0.5}\NormalTok{, }\AttributeTok{se =} \ConstantTok{FALSE}\NormalTok{)}
-
-\CommentTok{\# because we have \textasciigrave{}include\textasciigrave{} set to FALSE in the YAML header,}
-\CommentTok{\# output will not be automatically included.}
-\CommentTok{\# Instead, we have to specify this in the code chunk.}
 \end{Highlighting}
 \end{Shaded}
 
@@ -339,6 +334,14 @@ directly above it.
 \caption{\label{fig-example}An example of a figure.}
 
 \end{figure}%
+
+The YAML for this chapter includes the following option
+\texttt{crop:\ true}. This instructs \texttt{knitr} to use
+\texttt{pdfcrop} to crop produced pdf images. This requires the
+\texttt{pdfcrop} package, which is not bundled with \texttt{tinytex} by
+default. Install it with \texttt{tinytex::tlmgr\_install("pdfcrop")}. It
+also requires a \texttt{perl} environment. On Windows, I use Strawberry
+Perl (https://strawberryperl.com/), which is easy to install and set up.
 
 \subsection{Tables}\label{tables}
 
@@ -365,11 +368,11 @@ Below is a code chunk and the corresponding table that it produces:
 \begin{Highlighting}[]
 \CommentTok{\# first, read in the csv that the table data lives in}
 
-\NormalTok{table\_df }\OtherTok{\textless{}{-}} \FunctionTok{read\_csv}\NormalTok{(}\StringTok{"../data/table\_data.csv"}\NormalTok{)}
+\NormalTok{table\_df }\OtherTok{\textless{}{-}} \FunctionTok{read\_csv}\NormalTok{(}\StringTok{"../data/table\_data.csv"}\NormalTok{) }\CommentTok{\# I use read\_csv from the readr package}
 
 \CommentTok{\# next, use kableExtra to format and produce the table}
 
-\FunctionTok{kbl}\NormalTok{(table\_df, }\AttributeTok{booktabs =} \ConstantTok{TRUE}\NormalTok{)}
+\FunctionTok{kbl}\NormalTok{(table\_df, }\AttributeTok{booktabs =} \ConstantTok{TRUE}\NormalTok{)                 }\CommentTok{\# imo booktabs produces the best looking tables}
 \end{Highlighting}
 \end{Shaded}
 
@@ -410,15 +413,11 @@ demonstrated below.
 \NormalTok{x }\OtherTok{\textless{}{-}} \DecValTok{1}\SpecialCharTok{:}\DecValTok{100}                                  \CommentTok{\# Predictor variable}
 \NormalTok{y }\OtherTok{\textless{}{-}} \DecValTok{2} \SpecialCharTok{*}\NormalTok{ x }\SpecialCharTok{+} \FunctionTok{rnorm}\NormalTok{(}\DecValTok{100}\NormalTok{, }\AttributeTok{mean =} \DecValTok{0}\NormalTok{, }\AttributeTok{sd =} \DecValTok{10}\NormalTok{)  }\CommentTok{\# Response variable with noise}
 
-\NormalTok{data }\OtherTok{\textless{}{-}} \FunctionTok{data\_frame}\NormalTok{(x, y)}
+\NormalTok{data }\OtherTok{\textless{}{-}} \FunctionTok{data\_frame}\NormalTok{(x, y)                    }\CommentTok{\# turn into a dataframe}
 
-\CommentTok{\# Fit a linear model}
+\NormalTok{model }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x, }\AttributeTok{data =}\NormalTok{ data)             }\CommentTok{\# Fit a linear model}
 
-\NormalTok{model }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x, }\AttributeTok{data =}\NormalTok{ data)}
-
-\CommentTok{\# Summary of the model}
-
-\FunctionTok{summary}\NormalTok{(model)}
+\FunctionTok{summary}\NormalTok{(model)                              }\CommentTok{\# Summary of the model}
 \end{Highlighting}
 \end{Shaded}
 
@@ -496,6 +495,27 @@ that are added to the container (lines 22-36). Lines 39-64 are
 additional LaTeX packages that I found I needed to knit my thesis
 together within the Docker container. You can leave everything else
 as-is, including the \texttt{renv} relevant commands (lines 8-19).
+
+\section{Closing Remarks}\label{closing-remarks}
+
+I am not going to pretend that writing a fully-reproducible thesis is as
+easy as using something like Overleaf. If you've made it this far, I am
+assuming that you are at least motivated to try, good luck! There are
+idiosyncrasies to writing like this that are best dealt with as they are
+encountered. My own thesis was produced using this template, and for
+reference can be found on GitHub (add final link).
+
+Right now, the biggest issue with this is the lack of convenient
+real-time collaborative editing. I tried \texttt{trackdown}, but it is
+fairly clunky. There are probably other, better ways to do this, but in
+the end I just sent pdfs to my supervisors and they commented on them
+the normal way. While it isn't ideal, it worked well enough for me.
+
+Special thanks go Alex Casson, who wrote the original University of
+Manchester PhD thesis LaTeX template that you can find on Overleaf
+(https://www.overleaf.com/edu/theuniversityofmanchester\#templates).
+Since then, modifications to the LaTeX \texttt{.cls} file have been made
+by David Petrescu and myself.
 
 
 

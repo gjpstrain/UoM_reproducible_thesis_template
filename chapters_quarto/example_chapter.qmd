@@ -1,17 +1,17 @@
 ---
-title: "example_chapter"
+title: "example_chapter" # make sure this matches the chapter label in main.tex
 format:
   latex:
-    highlight-style: github
-    keep-tex: true
+    highlight-style: github # This is specifically for formatting code snippets in this example chapter
+    keep-tex: true          # required so that the .tex is produced for each chapter
       
 params:
-  eval_models: true
+  eval_models: false        # tells knitr to look for cached models. Set to `true` to re-evaluat models
   
 knitr:
   opts_chunk: 
-    cache_comments: false
-    crop: true                     # this is a perl script that crops images
+    cache_comments: false          # turn off cache comments
+    crop: true                     # this is a perl script that crops image pdfs
     out-width: NA                  # for an easier time with figure sizes, let knitr handle these
     out-height: NA                 # as above
     cache.path: "../thesis_cache/" # add in thesis cache directory
@@ -28,9 +28,11 @@ execute:
 
 # load libraries
 
-library(tidyverse)
-library(kableExtra)
-library(qwraps2)
+library(dplyr)       # for wrangling data
+library(readr)       # for reading csv
+library(ggplot2)     # for creating example plots
+library(kableExtra)  # for working with tables
+library(qwraps2)     # for producing the model cache
 ```
 
 ```{r}
@@ -38,7 +40,7 @@ library(qwraps2)
 
 # load in cached models
 
-if (!params$eval_models){ lazyload_cache_dir("../thesis_cache/") }
+if (!params$eval_models){ lazyload_cache_dir("../thesis_cache/") } # conditional cached model loading
 ```
 
 # Introduction
@@ -89,12 +91,14 @@ writing your fully-reproducible thesis. The general workflow is provided below:
 #| include: true
 #| fig-pos: "H"
 #| fig-cap: Edit this section in `main.tex` to specify your chapters and chapter labels.
+
 # find png in the supplied graphics folder
 
 # include pre-rendered graphics
 
 knitr::include_graphics(path = "../supplied_graphics/chapters_tex_example.png",
-                        dpi = NA)
+                        dpi = NA) # let quarto/tinytex handle DPI options when using
+                                  # include_graphics()
 ```
 
 # Writing With Quarto Markdown
@@ -121,8 +125,11 @@ the following commands in the console:
 tinytex::tlmgr_install("luatex85") # allows us to use luatex
 tinytex::tlmgr_install("tex-gyre") # additional font that we need
 ```
-
-After the YAML header, the first thing you should have is a `setup` chunk. Each
+Each chapter must have a YAML header. This specified options that we need to
+successfully render each chapter. I recommend using the same YAML header for each
+chapter, just for convenience
+After the YAML header, the first thing you should have in each
+`.qmd` chapter is a `setup` chunk. Each
 time any code chunk in the document is manually run, the `setup` chunk is 
 automatically run first. In it, you should load in the packages you need,
 set up any labelling vectors, and deal with function conflicts however you
@@ -261,7 +268,7 @@ Quarto offers a number of figure options that you might be
 familiar with as a LaTeX user. At a minimum, figures require:
 
  - A label that begins with `fig-` and contains no underscores.
- - The `include = TRUE` options so that the figure is displayed.
+ - The `include: true` option so that the figure is displayed.
  - A figure caption specified by `fig-cap: caption`
  
 I prefer to leave `fig-height` and `fig-width` as `NA` in the YAML, and to instead
@@ -271,22 +278,22 @@ figures always take up the full text width in the resulting pdf document.
 If you have pre-rendered graphics, such as screenshots of experiments or
 figures that are taken from other published work, you can use `knitr::include_graphics()`
 to include them, just as you would in native LaTeX. Below is a code chunk that
-accomplishes this. `include` has been set to false so that the figure itself is
+accomplishes this. `eval` has been set to false so that the figure itself is
 not displayed.
 
 ```{r}
 #| label: fig-include-graphics
-#| include: true
-#| eval: false
-#| echo: true
-#| fig-cap: Placeholder figure caption.
-#| fig-pos: "H"
+#| include: true                         # let's the figure produce something
+#| eval: false                           # prevents code from actually running
+#| echo: true                            # outputs code to pdf
+#| fig-cap: Placeholder figure caption.  # placeholder caption that won't be on pdf
+#| fig-pos: "H"                          # force figure placement  
 
 knitr::include_graphics(path = "../supplied_graphics/chapters_tex_example.png", dpi = NA)
 ```
 
-Code chunks can be inserted using a button in the top right corner of this
-window, or by using `Alt+shift+I`. Have a look at `example_chapter.qmd` in
+Code chunks can be inserted using a button in the top right corner of the editing
+window, or by using `Ctrl+Alt+I`. Have a look at `example_chapter.qmd` in
 `quarto_chapters` for a demo of this. @fig-example is produced using the R code
 chunk directly above it.
 
@@ -299,8 +306,6 @@ chunk directly above it.
 
 # generate some numbers, make a dataframe
 
-library(dplyr)
-
 x <- rep(1:10)
 y <- runif(10)
 
@@ -308,16 +313,17 @@ df <- tibble(x, y)
 
 # load plotting library, make basic plot
 
-library(ggplot2)
-
 df %>%
   ggplot(aes(x = x, y = y)) +
   geom_smooth(span = 0.5, se = FALSE)
-
-# because we have `include` set to FALSE in the YAML header,
-# output will not be automatically included.
-# Instead, we have to specify this in the code chunk.
 ```
+
+The YAML for this chapter includes the following option `crop: true`. This instructs
+`knitr` to use `pdfcrop` to crop produced pdf images. This requires the
+`pdfcrop` package, which is not bundled with `tinytex` by default. Install it with 
+`tinytex::tlmgr_install("pdfcrop")`. It also requires a `perl` environment. On
+Windows, I use Strawberry Perl (https://strawberryperl.com/), which is easy
+to install and set up.
 
 ## Tables
 
@@ -342,11 +348,11 @@ As with figures, chunks that produce tables have several requirements:
 
 # first, read in the csv that the table data lives in
 
-table_df <- read_csv("../data/table_data.csv")
+table_df <- read_csv("../data/table_data.csv") # I use read_csv from the readr package
 
 # next, use kableExtra to format and produce the table
 
-kbl(table_df, booktabs = TRUE)
+kbl(table_df, booktabs = TRUE)                 # imo booktabs produces the best looking tables
 ```
 
 `kableExtra` also includes options for different kinds of LaTeX styling. See
@@ -371,15 +377,11 @@ set.seed(123)                               # Set seed for reproducibility
 x <- 1:100                                  # Predictor variable
 y <- 2 * x + rnorm(100, mean = 0, sd = 10)  # Response variable with noise
 
-data <- data_frame(x, y)
+data <- data_frame(x, y)                    # turn into a dataframe
 
-# Fit a linear model
+model <- lm(y ~ x, data = data)             # Fit a linear model
 
-model <- lm(y ~ x, data = data)
-
-# Summary of the model
-
-summary(model)
+summary(model)                              # Summary of the model
 ```
 
 Setting `eval_models` to `TRUE` in the YAML header means models are evaluated and cached with
@@ -446,3 +448,36 @@ change the version of R you are using (line 2), and the files that are added to 
 container (lines 22-36). Lines 39-64 are additional LaTeX packages that I found
 I needed to knit my thesis together within the Docker container. You can leave 
 everything else as-is, including the `renv` relevant commands (lines 8-19).
+
+# Closing Remarks
+
+I am not going to pretend that writing a fully-reproducible thesis is as easy as
+using something like Overleaf. If you've made it this far, I am assuming that you
+are at least motivated to try, good luck! There are idiosyncrasies to writing
+like this that are best dealt with as they are encountered. My own thesis was
+produced using this template, and for reference can be found on GitHub (add final
+link). 
+
+Right now, the biggest issue with this is the lack of convenient real-time collaborative
+editing. I tried `trackdown`, but it is fairly clunky. There are probably other, better
+ways to do this, but in the end I just sent pdfs to my supervisors and they 
+commented on them the normal way. While it isn't ideal, it worked well enough for me.
+
+Special thanks go Alex Casson, who wrote the original University of Manchester
+PhD thesis LaTeX template that you can find on Overleaf (https://www.overleaf.com/edu/theuniversityofmanchester#templates).
+Since then, modifications to the LaTeX `.cls` file have been made by David
+Petrescu and myself.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
